@@ -1,8 +1,8 @@
-
-#include <simpleversion.hpp>
 #include <simple.h>
+#include <cstdlib>
 
 int main()
 {
+    std::abort();
     simple();   
 }

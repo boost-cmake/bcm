@@ -7,7 +7,11 @@ include(BCMInstallTargets)
 include(BCMSetupVersion)
 include(BCMTest)
 
-bcm_setup_version(VERSION 1.0 GENERATE_HEADER simpleversion.hpp)
+bcm_setup_version(PARSE_HEADER include/version.h)
+
+if(NOT "${PROJECT_VERSION}" STREQUAL "2.3.5")
+    message(SEND_ERROR "Incorrect version was parsed: ${PROJECT_VERSION}")
+endif()
 
 add_library(simple INTERFACE)
 

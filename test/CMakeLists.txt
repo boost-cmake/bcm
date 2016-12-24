@@ -49,3 +49,4 @@ function(create_test)
 endfunction()
 
 create_test(NAME simple BUILDS libsimple basicapp)
+create_test(NAME parseversion BUILDS parseversion)
