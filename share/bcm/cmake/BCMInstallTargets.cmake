@@ -2,6 +2,25 @@ include(CMakeParseArguments)
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 
+set(_bcm_tmp_list_marker "@@__bcm_tmp_list_marker__@@")
+
+function(bcm_list_split LIST ELEMENT OUTPUT_LIST)
+    string(REPLACE ";" ${_bcm_tmp_list_marker} TMPLIST "${${LIST}}")
+    string(REPLACE "${_bcm_tmp_list_marker}${ELEMENT}${_bcm_tmp_list_marker}" ";" TMPLIST "${TMPLIST}")
+    string(REPLACE "${ELEMENT}${_bcm_tmp_list_marker}" "" TMPLIST "${TMPLIST}")
+    string(REPLACE "${_bcm_tmp_list_marker}${ELEMENT}" "" TMPLIST "${TMPLIST}")
+    set(LIST_PREFIX _bcm_list_split_${OUTPUT_LIST}_SUBLIST)
+    set(count 0)
+    set(result)
+    foreach(SUBLIST ${TMPLIST})
+        string(REPLACE ${_bcm_tmp_list_marker} ";" TMPSUBLIST "${SUBLIST}")
+        math(EXPR count "${count}+1")
+        set(${LIST_PREFIX}_${count} "${TMPSUBLIST}" PARENT_SCOPE)
+        list(APPEND result ${LIST_PREFIX}_${count})
+    endforeach()
+    set(${OUTPUT_LIST} "${result}" PARENT_SCOPE)
+endfunction()
+
 function(bcm_write_package_template_header NAME)
     file(WRITE ${NAME} "
 
@@ -96,9 +115,12 @@ function(bcm_install_targets)
 
     bcm_write_package_template_header(${CONFIG_TEMPLATE})
 
-    foreach(DEPEND ${PARSE_DEPENDS})
-        bcm_write_package_template_function(${CONFIG_TEMPLATE} find_dependency ${DEPEND})
-    endforeach()
+    if(PARSE_DEPENDS)
+        bcm_list_split(PARSE_DEPENDS PACKAGE DEPENDS_LIST)
+        foreach(DEPEND ${DEPENDS_LIST})
+            bcm_write_package_template_function(${CONFIG_TEMPLATE} find_dependency ${${DEPEND}})
+        endforeach()
+    endif()
 
     if(LIB_TARGETS)
         bcm_write_package_template_function(${CONFIG_TEMPLATE} include "\${CMAKE_CURRENT_LIST_DIR}/${TARGET_FILE}.cmake")
