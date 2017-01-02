@@ -78,7 +78,7 @@ endfunction()
 
 function(bcm_install_targets)
     set(options)
-    set(oneValueArgs NAMESPACE)
+    set(oneValueArgs NAMESPACE COMPATIBILITY NAME)
     set(multiValueArgs TARGETS INCLUDE DEPENDS)
 
     cmake_parse_arguments(PARSE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
@@ -110,18 +110,23 @@ function(bcm_install_targets)
         endif()
     endforeach()
 
-    string(TOUPPER ${PROJECT_NAME} PROJECT_UPPER)
-    string(TOLOWER ${PROJECT_NAME} PROJECT_LOWER)
+    set(PACKAGE_NAME ${PROJECT_NAME})
+    if(PARSE_NAME)
+        set(PACKAGE_NAME ${PARSE_NAME})
+    endif()
 
-    set(TARGET_FILE ${PROJECT_LOWER}-targets)
-    set(CONFIG_NAME ${PROJECT_LOWER}-config)
+    string(TOUPPER ${PACKAGE_NAME} PACKAGE_NAME_UPPER)
+    string(TOLOWER ${PACKAGE_NAME} PROJECT_NAME_LOWER)
+
+    set(TARGET_FILE ${PROJECT_NAME_LOWER}-targets)
+    set(CONFIG_NAME ${PROJECT_NAME_LOWER}-config)
     set(TARGET_VERSION ${PROJECT_VERSION})
 
     set(LIB_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR})
     set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
-    set(CONFIG_PACKAGE_INSTALL_DIR ${LIB_INSTALL_DIR}/cmake/${PROJECT_LOWER})
+    set(CONFIG_PACKAGE_INSTALL_DIR ${LIB_INSTALL_DIR}/cmake/${PROJECT_NAME_LOWER})
 
-    set(CONFIG_TEMPLATE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_LOWER}-config.cmake.in")
+    set(CONFIG_TEMPLATE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME_LOWER}-config.cmake.in")
 
     bcm_write_package_template_header(${CONFIG_TEMPLATE})
 
@@ -135,7 +140,7 @@ function(bcm_install_targets)
     if(LIB_TARGETS)
         bcm_write_package_template_function(${CONFIG_TEMPLATE} include "\${CMAKE_CURRENT_LIST_DIR}/${TARGET_FILE}.cmake")
     endif()
-    foreach(NAME ${PROJECT_NAME} ${PROJECT_UPPER} ${PROJECT_LOWER})
+    foreach(NAME ${PACKAGE_NAME} ${PACKAGE_NAME_UPPER} ${PROJECT_NAME_LOWER})
         bcm_write_package_template_function(${CONFIG_TEMPLATE} set_and_check ${NAME}_INCLUDE_DIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
         bcm_write_package_template_function(${CONFIG_TEMPLATE} set_and_check ${NAME}_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
         bcm_write_package_template_function(${CONFIG_TEMPLATE} set ${NAME}_LIBRARIES ${EXPORT_LIB_TARGETS})
@@ -148,11 +153,14 @@ function(bcm_install_targets)
         INSTALL_DESTINATION ${CONFIG_PACKAGE_INSTALL_DIR}
         PATH_VARS LIB_INSTALL_DIR INCLUDE_INSTALL_DIR
     )
-
+    set(COMPATIBILITY_ARG SameMajorVersion)
+    if(PARSE_COMPATIBILITY)
+        set(COMPATIBILITY_ARG ${PARSE_COMPATIBILITY})
+    endif()
     write_basic_package_version_file(
         ${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_NAME}-version.cmake
         VERSION ${TARGET_VERSION}
-        COMPATIBILITY SameMajorVersion
+        COMPATIBILITY ${COMPATIBILITY_ARG}
     )
 
     foreach(INCLUDE ${PARSE_INCLUDE})
