@@ -78,12 +78,13 @@ endfunction()
 
 function(bcm_install_targets)
     set(options)
-    set(oneValueArgs)
+    set(oneValueArgs NAMESPACE)
     set(multiValueArgs TARGETS INCLUDE DEPENDS)
 
     cmake_parse_arguments(PARSE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     set(LIB_TARGETS)
+    set(EXPORT_LIB_TARGETS)
     set(EXE_TARGETS)
 
     foreach(TARGET ${PARSE_TARGETS})
@@ -95,6 +96,15 @@ function(bcm_install_targets)
         get_target_property(TARGET_TYPE ${TARGET} TYPE)
         if(${TARGET_TYPE} MATCHES "LIBRARY")
             list(APPEND LIB_TARGETS ${TARGET})
+            get_target_property(TARGET_NAME ${TARGET} EXPORT_NAME)
+            if(NOT TARGET_NAME)
+                set(TARGET_NAME ${TARGET})
+            endif()
+            if(PARSE_NAMESPACE)
+                list(APPEND EXPORT_LIB_TARGETS "${PARSE_NAMESPACE}${TARGET_NAME}")
+            else()
+                list(APPEND EXPORT_LIB_TARGETS ${TARGET_NAME})
+            endif()
         else()
             list(APPEND EXE_TARGETS ${TARGET})
         endif()
@@ -128,7 +138,8 @@ function(bcm_install_targets)
     foreach(NAME ${PROJECT_NAME} ${PROJECT_UPPER} ${PROJECT_LOWER})
         bcm_write_package_template_function(${CONFIG_TEMPLATE} set_and_check ${NAME}_INCLUDE_DIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
         bcm_write_package_template_function(${CONFIG_TEMPLATE} set_and_check ${NAME}_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
-        bcm_write_package_template_function(${CONFIG_TEMPLATE} set ${NAME}_LIBRARIES ${LIB_TARGETS})
+        bcm_write_package_template_function(${CONFIG_TEMPLATE} set ${NAME}_LIBRARIES ${EXPORT_LIB_TARGETS})
+        bcm_write_package_template_function(${CONFIG_TEMPLATE} set ${NAME}_LIBRARY ${EXPORT_LIB_TARGETS})
     endforeach()
 
     configure_package_config_file(
@@ -155,9 +166,14 @@ function(bcm_install_targets)
             ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
         )
 
+        set(NAMESPACE_ARG)
+        if(PARSE_NAMESPACE)
+            set(NAMESPACE_ARG "NAMESPACE;${PARSE_NAMESPACE}")
+        endif()
         install( EXPORT ${TARGET_FILE}
             DESTINATION
             ${CONFIG_PACKAGE_INSTALL_DIR}
+            ${NAMESPACE_ARG}
         )
     
         install( FILES

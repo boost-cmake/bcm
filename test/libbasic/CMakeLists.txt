@@ -11,7 +11,7 @@ bcm_setup_version(VERSION 1.0)
 
 find_package(simple)
 add_library(basic main.cpp)
-target_link_libraries(basic simple)
+target_link_libraries(basic ${simple_LIBRARIES})
 
 bcm_install_targets(TARGETS basic
     DEPENDS
