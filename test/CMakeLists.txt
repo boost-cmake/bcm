@@ -49,6 +49,7 @@ function(create_test)
 endfunction()
 
 create_test(NAME simple BUILDS libsimple basicapp)
+create_test(NAME boostsimple BUILDS boostsimple boostbasic)
 create_test(NAME basic BUILDS libsimple libbasic)
 create_test(NAME simplenamespace BUILDS libsimplenamespace libbasic)
 create_test(NAME simplecustomname BUILDS libsimplecustomname libbasic)

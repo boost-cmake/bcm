@@ -11,7 +11,7 @@ bcm_setup_version(VERSION 1.0 GENERATE_HEADER simpleversion.hpp)
 
 add_library(simple INTERFACE)
 
-bcm_install_targets(TARGETS simple INCLUDE include)
+bcm_install_targets(TARGETS simple INCLUDE include NAMESPACE lib::)
 
 bcm_add_test(NAME simpletest SOURCES test.cpp)
 target_link_libraries(simpletest simple)
