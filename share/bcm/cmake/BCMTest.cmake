@@ -12,6 +12,12 @@ if(NOT TARGET tests)
     add_dependencies(check tests)
 endif()
 
+add_library(_bcm_test_dependencies INTERFACE)
+
+function(bcm_test_link_libraries)
+    target_link_libraries(_bcm_test_dependencies INTERFACE ${ARGN})
+endfunction()
+
 function(bcm_mark_as_test)
     foreach(TEST_TARGET ${ARGN})
         if (NOT BUILD_TESTING)
@@ -24,7 +30,7 @@ function(bcm_mark_as_test)
 endfunction(bcm_mark_as_test)
 
 function(bcm_add_test)
-    set(options COMPILE_ONLY WILL_FAIL)
+    set(options COMPILE_ONLY WILL_FAIL NO_TEST_LIBS)
     set(oneValueArgs NAME)
     set(multiValueArgs SOURCES CONTENT)
 
@@ -61,10 +67,13 @@ function(bcm_add_test)
             set_tests_properties(${PARSE_NAME} PROPERTIES WILL_FAIL TRUE)
         endif()
     endif()
+    if(NOT PARSE_NO_TEST_LIBS)
+        target_link_libraries(${PARSE_NAME} _bcm_test_dependencies)
+    endif()
 endfunction(bcm_add_test)
 
 function(bcm_test_header)
-    set(options STATIC)
+    set(options STATIC NO_TEST_LIBS)
     set(oneValueArgs NAME HEADER)
     set(multiValueArgs)
 
@@ -85,5 +94,8 @@ function(bcm_test_header)
         bcm_add_test(NAME ${PARSE_NAME} CONTENT
             "#include <${PARSE_HEADER}>\nint main() {}\n"
         )
+    endif()
+    if(NOT PARSE_NO_TEST_LIBS)
+        target_link_libraries(${PARSE_NAME} _bcm_test_dependencies)
     endif()
 endfunction(bcm_test_header)
