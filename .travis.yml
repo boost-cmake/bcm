@@ -10,7 +10,7 @@ matrix:
           compiler: clang
 
         - os: linux
-          compiler: g++
+          compiler: gcc
             apt:
               packages:
                 - util-linux
@@ -19,7 +19,7 @@ matrix:
                 - ubuntu-toolchain-r-test
 
 install:
-    - export CHECKOUT_PATH=`pwd`;
+    - export CHECKOUT_PATH=`pwd`
     # Setup deps directory
     # - export DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
     # - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
