@@ -11,6 +11,7 @@ matrix:
 
         - os: linux
           compiler: gcc
+          addons: &gcc
             apt:
               packages:
                 - util-linux
