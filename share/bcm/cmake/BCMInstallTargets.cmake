@@ -89,7 +89,7 @@ function(bcm_install_targets)
 
     foreach(TARGET ${PARSE_TARGETS})
         foreach(INCLUDE ${PARSE_INCLUDE})
-            get_filename_component(INCLUDE_PATH INCLUDE ABSOLUTE)
+            get_filename_component(INCLUDE_PATH ${INCLUDE} ABSOLUTE)
             target_include_directories(${TARGET} INTERFACE $<BUILD_INTERFACE:${INCLUDE_PATH}>)
         endforeach()
         target_include_directories(${TARGET} INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
