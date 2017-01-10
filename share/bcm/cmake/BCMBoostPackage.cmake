@@ -6,7 +6,7 @@ include(BCMTest)
 function(bcm_boost_package PACKAGE)
     set(options)
     set(oneValueArgs VERSION VERSION_HEADER)
-    set(multiValueArgs SOURCES DEPENDS)
+    set(multiValueArgs SOURCES DEPENDS EXTERNAL_DEPENDS)
 
     cmake_parse_arguments(PARSE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
@@ -27,6 +27,9 @@ function(bcm_boost_package PACKAGE)
     set_property(TARGET boost_${PACKAGE} PROPERTY EXPORT_NAME ${PACKAGE})
 
     set(DEPENDS_PACKAGES)
+    if(PARSE_EXTERNAL_DEPENDS)
+        set(DEPENDS_PACKAGES ${PARSE_EXTERNAL_DEPENDS})
+    endif()
 
     foreach(DEPEND ${PARSE_DEPENDS})
         find_package(boost_${DEPEND} REQUIRED)
