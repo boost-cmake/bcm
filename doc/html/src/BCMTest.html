@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>BCMTest &mdash; bcm 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/boostbook.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="bcm 0.1 documentation" href="../index.html" />
+    <link rel="up" title="Modules" href="Modules.html" />
+    <link rel="prev" title="BCMSetupVersion" href="BCMSetupVersion.html" /> 
+  </head>
+  <body role="document">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86"src="../_static/boost-proposed.png"></td>
+</tr></table>
+
+<div class="spirit-nav">
+<a accesskey="p"  href="BCMSetupVersion.html"><img src="../_static/prev.png" alt="Prev"></a>
+<a accesskey="u" href="Modules.html"><img src="../_static/up.png" alt="Up"></a>
+<a accesskey="h" href="../index.html"><img src="../_static/home.png" alt="Home"></a>
+<a accesskey="n"  ><img src="../_static/next.png" alt="Next"></a>
+</div>
+  
+
+    <div class="document">
+  <div class="chapter">
+      <div class="body" role="main">
+        
+  <div class="section" id="bcmtest">
+<h1>BCMTest<a class="headerlink" href="#bcmtest" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="bcm-mark-as-test">
+<h2>bcm_mark_as_test<a class="headerlink" href="#bcm-mark-as-test" title="Permalink to this headline">¶</a></h2>
+<p>This marks the target as a test, so it will be built with the <code class="docutils literal"><span class="pre">tests</span></code> target. If <code class="docutils literal"><span class="pre">BUILD_TESTING</span></code> is set to off then the target will not be built as part of the all target.</p>
+</div>
+<div class="section" id="bcm-test-link-libraries">
+<h2>bcm_test_link_libraries<a class="headerlink" href="#bcm-test-link-libraries" title="Permalink to this headline">¶</a></h2>
+<p>This is the libraries to be linked the tests targets that are created.</p>
+</div>
+<div class="section" id="bcm-add-test">
+<h2>bcm_add_test<a class="headerlink" href="#bcm-add-test" title="Permalink to this headline">¶</a></h2>
+<p>This adds a test to ran or compiled.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_add_test-arg-SOURCES">
+<code class="descname">SOURCES</code><code class="descclassname"> &lt;source-files&gt;...</code><a class="headerlink" href="#cmdoption-bcm_add_test-arg-SOURCES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Source files to be compiled for the tests.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_add_test-arg-CONTENT">
+<code class="descname">CONTENT</code><code class="descclassname"> &lt;content&gt;</code><a class="headerlink" href="#cmdoption-bcm_add_test-arg-CONTENT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This a string that will be used to create a test to compiled and/or ran.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_add_test-arg-NAME">
+<code class="descname">NAME</code><code class="descclassname"> &lt;name&gt;</code><a class="headerlink" href="#cmdoption-bcm_add_test-arg-NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Name of the test.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_add_test-arg-COMPILE_ONLY">
+<code class="descname">COMPILE_ONLY</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-bcm_add_test-arg-COMPILE_ONLY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This just compiles the test. By default, tests are ran.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_add_test-arg-WILL_FAIL">
+<code class="descname">WILL_FAIL</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-bcm_add_test-arg-WILL_FAIL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Specifies that the test will fail.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_add_test-arg-NO_TEST_LIBS">
+<code class="descname">NO_TEST_LIBS</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-bcm_add_test-arg-NO_TEST_LIBS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This won&#8217;t link in the libraries specified by <code class="docutils literal"><span class="pre">bcm_test_link_libraries</span></code></p>
+</div>
+<div class="section" id="bcm-test-header">
+<h2>bcm_test_header<a class="headerlink" href="#bcm-test-header" title="Permalink to this headline">¶</a></h2>
+<p>This creates a test to test the include of a header.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_test_header-arg-NAME">
+<code class="descname">NAME</code><code class="descclassname"> &lt;name&gt;</code><a class="headerlink" href="#cmdoption-bcm_test_header-arg-NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Name of the test.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_test_header-arg-HEADER">
+<code class="descname">HEADER</code><code class="descclassname"> &lt;header-file&gt;</code><a class="headerlink" href="#cmdoption-bcm_test_header-arg-HEADER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The header to include.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_test_header-arg-STATIC">
+<code class="descname">STATIC</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-bcm_test_header-arg-STATIC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Rather than just test the include, using <code class="docutils literal"><span class="pre">STATIC</span></code> option will test the include across translation units. This helps check for incorrect include guards and duplicate symbols.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_test_header-arg-NO_TEST_LIBS">
+<code class="descname">NO_TEST_LIBS</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-bcm_test_header-arg-NO_TEST_LIBS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This won&#8217;t link in the libraries specified by <code class="docutils literal"><span class="pre">bcm_test_link_libraries</span></code></p>
+</div>
+</div>
+
+
+      </div>
+  </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer" role="contentinfo">
+    <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+    <td align="left"></td>
+    <td align="right"><div class="copyright-footer">
+            &#169; Copyright 2017, Paul Fultz II.
+        
+          Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.3+.
+          <p>Distributed under the Boost Software License, Version 1.0.
+          (See accompanying file <code class="filename">LICENSE_1_0.txt</code> or copy at 
+          <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+          </p>
+    </div></td>
+    </tr></table>
+    </div>
+  </body>
+</html>

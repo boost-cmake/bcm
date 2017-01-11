@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>BCMSetupVersion &mdash; bcm 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/boostbook.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="bcm 0.1 documentation" href="../index.html" />
+    <link rel="up" title="Modules" href="Modules.html" />
+    <link rel="next" title="BCMTest" href="BCMTest.html" />
+    <link rel="prev" title="BCMInstallTargets" href="BCMInstallTargets.html" /> 
+  </head>
+  <body role="document">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86"src="../_static/boost-proposed.png"></td>
+</tr></table>
+
+<div class="spirit-nav">
+<a accesskey="p"  href="BCMInstallTargets.html"><img src="../_static/prev.png" alt="Prev"></a>
+<a accesskey="u" href="Modules.html"><img src="../_static/up.png" alt="Up"></a>
+<a accesskey="h" href="../index.html"><img src="../_static/home.png" alt="Home"></a>
+<a accesskey="n"  href="BCMTest.html"><img src="../_static/next.png" alt="Next"></a>
+</div>
+  
+
+    <div class="document">
+  <div class="chapter">
+      <div class="body" role="main">
+        
+  <div class="section" id="bcmsetupversion">
+<h1>BCMSetupVersion<a class="headerlink" href="#bcmsetupversion" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="bcm-setup-version">
+<h2>bcm_setup_version<a class="headerlink" href="#bcm-setup-version" title="Permalink to this headline">¶</a></h2>
+<p>This sets up the project version by setting these version variables:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>PROJECT_VERSION, ${PROJECT_NAME}_VERSION
+PROJECT_VERSION_MAJOR, ${PROJECT_NAME}_VERSION_MAJOR
+PROJECT_VERSION_MINOR, ${PROJECT_NAME}_VERSION_MINOR
+PROJECT_VERSION_PATCH, ${PROJECT_NAME}_VERSION_PATCH
+</pre></div>
+</div>
+<dl class="option">
+<dt id="cmdoption-bcm_setup_version-arg-VERSION">
+<code class="descname">VERSION</code><code class="descclassname"> &lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;</code><a class="headerlink" href="#cmdoption-bcm_setup_version-arg-VERSION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This is the version to be set.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_setup_version-arg-GENERATE_HEADER">
+<code class="descname">GENERATE_HEADER</code><code class="descclassname"> &lt;header-name&gt;</code><a class="headerlink" href="#cmdoption-bcm_setup_version-arg-GENERATE_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This is a header which will be generated with defines for the version number.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_setup_version-arg-PREFIX">
+<code class="descname">PREFIX</code><code class="descclassname"> &lt;identifier&gt;</code><a class="headerlink" href="#cmdoption-bcm_setup_version-arg-PREFIX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>By default, the upper case of the project name is used as a prefix for the version macros that are defined in the generated header: <code class="docutils literal"><span class="pre">${PREFIX}_VERSION_MAJOR</span></code>, <code class="docutils literal"><span class="pre">${PREFIX}_VERSION_MINOR</span></code>, <code class="docutils literal"><span class="pre">${PREFIX}_VERSION_PATCH</span></code>, and <code class="docutils literal"><span class="pre">${PREFIX}_VERSION</span></code>. The <code class="docutils literal"><span class="pre">PREFIX</span></code> option allows overriding the prefix name used for the macros.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_setup_version-arg-PARSE_HEADER">
+<code class="descname">PARSE_HEADER</code><code class="descclassname"> &lt;header-name&gt;</code><a class="headerlink" href="#cmdoption-bcm_setup_version-arg-PARSE_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Rather than set a version and generate a header, this will parse a header with macor that define the version, and use those values to set the version for the project.</p>
+</div>
+</div>
+
+
+      </div>
+  </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer" role="contentinfo">
+    <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+    <td align="left"></td>
+    <td align="right"><div class="copyright-footer">
+            &#169; Copyright 2017, Paul Fultz II.
+        
+          Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.3+.
+          <p>Distributed under the Boost Software License, Version 1.0.
+          (See accompanying file <code class="filename">LICENSE_1_0.txt</code> or copy at 
+          <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+          </p>
+    </div></td>
+    </tr></table>
+    </div>
+  </body>
+</html>

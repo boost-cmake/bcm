@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>BCMInstallTargets &mdash; bcm 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/boostbook.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="bcm 0.1 documentation" href="../index.html" />
+    <link rel="up" title="Modules" href="Modules.html" />
+    <link rel="next" title="BCMSetupVersion" href="BCMSetupVersion.html" />
+    <link rel="prev" title="BCMBoostPackage" href="BCMBoostPackage.html" /> 
+  </head>
+  <body role="document">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86"src="../_static/boost-proposed.png"></td>
+</tr></table>
+
+<div class="spirit-nav">
+<a accesskey="p"  href="BCMBoostPackage.html"><img src="../_static/prev.png" alt="Prev"></a>
+<a accesskey="u" href="Modules.html"><img src="../_static/up.png" alt="Up"></a>
+<a accesskey="h" href="../index.html"><img src="../_static/home.png" alt="Home"></a>
+<a accesskey="n"  href="BCMSetupVersion.html"><img src="../_static/next.png" alt="Next"></a>
+</div>
+  
+
+    <div class="document">
+  <div class="chapter">
+      <div class="body" role="main">
+        
+  <div class="section" id="bcminstalltargets">
+<h1>BCMInstallTargets<a class="headerlink" href="#bcminstalltargets" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="bcm-install-targets">
+<h2>bcm_install_targets<a class="headerlink" href="#bcm-install-targets" title="Permalink to this headline">¶</a></h2>
+<p>This install the targets specified. It will also install a corresponding cmake package config(which can be found with <code class="docutils literal"><span class="pre">find_package</span></code>) to link against the library targets.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_install_targets-arg-TARGETS">
+<code class="descname">TARGETS</code><code class="descclassname"> &lt;target-name&gt;...</code><a class="headerlink" href="#cmdoption-bcm_install_targets-arg-TARGETS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The name of targets to install.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_install_targets-arg-INCLUDE">
+<code class="descname">INCLUDE</code><code class="descclassname"> &lt;directory&gt;...</code><a class="headerlink" href="#cmdoption-bcm_install_targets-arg-INCLUDE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Installs include directories. It also makes the include directory available for targets to be installed.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_install_targets-arg-DEPENDS">
+<code class="descname">DEPENDS</code><code class="descclassname"> PACKAGE &lt;package-name&gt;...</code><a class="headerlink" href="#cmdoption-bcm_install_targets-arg-DEPENDS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This will search for these dependent packages in the cmake package config that is generated.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_install_targets-arg-NAMESPACE">
+<code class="descname">NAMESPACE</code><code class="descclassname"> &lt;namespace&gt;</code><a class="headerlink" href="#cmdoption-bcm_install_targets-arg-NAMESPACE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This is the namespace add to the targets that are exported.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_install_targets-arg-COMPATIBILITY">
+<code class="descname">COMPATIBILITY</code><code class="descclassname"> &lt;compatibility&gt;</code><a class="headerlink" href="#cmdoption-bcm_install_targets-arg-COMPATIBILITY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This is version compatibility specified by cmake version config.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_install_targets-arg-NAME">
+<code class="descname">NAME</code><code class="descclassname"> &lt;name&gt;</code><a class="headerlink" href="#cmdoption-bcm_install_targets-arg-NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This is the name to use for the package config file. By default, this uses the project name, but this parameter can override it.</p>
+</div>
+</div>
+
+
+      </div>
+  </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer" role="contentinfo">
+    <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+    <td align="left"></td>
+    <td align="right"><div class="copyright-footer">
+            &#169; Copyright 2017, Paul Fultz II.
+        
+          Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.3+.
+          <p>Distributed under the Boost Software License, Version 1.0.
+          (See accompanying file <code class="filename">LICENSE_1_0.txt</code> or copy at 
+          <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+          </p>
+    </div></td>
+    </tr></table>
+    </div>
+  </body>
+</html>

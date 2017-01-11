@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>BCMBoostPackage &mdash; bcm 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/boostbook.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="bcm 0.1 documentation" href="../index.html" />
+    <link rel="up" title="Modules" href="Modules.html" />
+    <link rel="next" title="BCMInstallTargets" href="BCMInstallTargets.html" />
+    <link rel="prev" title="Modules" href="Modules.html" /> 
+  </head>
+  <body role="document">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86"src="../_static/boost-proposed.png"></td>
+</tr></table>
+
+<div class="spirit-nav">
+<a accesskey="p"  href="Modules.html"><img src="../_static/prev.png" alt="Prev"></a>
+<a accesskey="u" href="Modules.html"><img src="../_static/up.png" alt="Up"></a>
+<a accesskey="h" href="../index.html"><img src="../_static/home.png" alt="Home"></a>
+<a accesskey="n"  href="BCMInstallTargets.html"><img src="../_static/next.png" alt="Next"></a>
+</div>
+  
+
+    <div class="document">
+  <div class="chapter">
+      <div class="body" role="main">
+        
+  <div class="section" id="bcmboostpackage">
+<h1>BCMBoostPackage<a class="headerlink" href="#bcmboostpackage" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="bcm-boost-package">
+<h2>bcm_boost_package<a class="headerlink" href="#bcm-boost-package" title="Permalink to this headline">¶</a></h2>
+<p>This setups a boost package in cmake. It creates a library target that will be installed. The target will be exported and it will be in the <code class="docutils literal"><span class="pre">boost::</span></code> namespace. In addition, the target will be setup to auto-link for the tests.</p>
+<dl class="option">
+<dt>
+<code class="descname">&lt;package-name&gt;</code></dt>
+<dd></dd></dl>
+
+<p>The name of the boost package.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_boost_package-arg-VERSION">
+<code class="descname">VERSION</code><code class="descclassname"> &lt;version&gt;</code><a class="headerlink" href="#cmdoption-bcm_boost_package-arg-VERSION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Sets the version of the package.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_boost_package-arg-VERSION_HEADER">
+<code class="descname">VERSION_HEADER</code><code class="descclassname"> &lt;header&gt;</code><a class="headerlink" href="#cmdoption-bcm_boost_package-arg-VERSION_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This will parse the version from a header file.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_boost_package-arg-SOURCES">
+<code class="descname">SOURCES</code><code class="descclassname"> &lt;source-files&gt;...</code><a class="headerlink" href="#cmdoption-bcm_boost_package-arg-SOURCES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The source files to build the library.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_boost_package-arg-DEPENDS">
+<code class="descname">DEPENDS</code><code class="descclassname"> &lt;boost-dependencies&gt;...</code><a class="headerlink" href="#cmdoption-bcm_boost_package-arg-DEPENDS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This specifies the internal boost dependecies, that is, dependencies on other boost libraries. The libraries should not be prefixed with <code class="docutils literal"><span class="pre">boost_</span></code> nor <code class="docutils literal"><span class="pre">boost::</span></code>.</p>
+<dl class="option">
+<dt id="cmdoption-bcm_boost_package-arg-EXTERNAL_DEPENDS">
+<code class="descname">EXTERNAL_DEPENDS</code><code class="descclassname"> PACKAGE &lt;dependencies&gt;...</code><a class="headerlink" href="#cmdoption-bcm_boost_package-arg-EXTERNAL_DEPENDS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This specifies external <code class="docutils literal"><span class="pre">find_package</span></code> dependencies.</p>
+</div>
+</div>
+
+
+      </div>
+  </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer" role="contentinfo">
+    <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+    <td align="left"></td>
+    <td align="right"><div class="copyright-footer">
+            &#169; Copyright 2017, Paul Fultz II.
+        
+          Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.3+.
+          <p>Distributed under the Boost Software License, Version 1.0.
+          (See accompanying file <code class="filename">LICENSE_1_0.txt</code> or copy at 
+          <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+          </p>
+    </div></td>
+    </tr></table>
+    </div>
+  </body>
+</html>
