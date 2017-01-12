@@ -12,8 +12,8 @@ environment:
   - GENERATOR: "Visual Studio 14 2015"
     CONFIG: Debug
 
-  - GENERATOR: "Visual Studio 14 2015"
-    CONFIG: Release
+  # - GENERATOR: "Visual Studio 14 2015"
+  #   CONFIG: Release
 
 matrix:
   fast_finish: true
@@ -26,7 +26,7 @@ build_script:
  - cmd: cmake --version
  - cmd: mkdir build
  - cmd: cd build
- - cmd: cmake .. -G"%GENERATOR%" -DBUILD_EXAMPLES=On
+ - cmd: cmake .. -G"%GENERATOR%"
  - cmd: cmake --build . --config %CONFIG% --target check
 
 # test_script:
