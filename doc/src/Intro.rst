@@ -12,10 +12,12 @@ Usage
 The modules can be installed using standard cmake install::
 
     mkdir build
+    cd build
     cmake ..
     cmake --build . --target install
 
-Once installed, the modules can be used by using `find_package`::
+Once installed, the modules can be used by using `find_package` and then including the appropriate module::
 
     find_package(BCM)
     include(BCMBoostPackage)
+

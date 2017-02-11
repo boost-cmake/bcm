@@ -12,7 +12,7 @@ This setups a boost package in cmake. It creates a library target that will be i
 
 .. option:: <package-name>
 
-The name of the boost package. 
+The name of the boost package. The corresponding cmake package config can be used with ``find_package(boost_<package-name>)``.
 
 .. option:: VERSION <version>
 
@@ -20,7 +20,7 @@ Sets the version of the package.
 
 .. option:: VERSION_HEADER <header>
 
-This will parse the version from a header file.
+This will parse the version from a header file. It parses it from the macros defined in the header as ``BOOST_<package-name>_VERSION_MAJOR``, ``BOOST_<package-name>_VERSION_MINOR``, and ``BOOST_<package-name>_VERSION_PATCH``.
 
 .. option:: SOURCES <source-files>...
 
