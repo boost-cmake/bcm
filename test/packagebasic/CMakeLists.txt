@@ -7,7 +7,7 @@ bcm_find_package(simple)
 
 bcm_package(basic 
     VERSION 1.0
-    INCLUDES include
+    INCLUDE include
     SOURCES
         main.cpp
 )

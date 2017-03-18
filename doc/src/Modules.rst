@@ -4,8 +4,8 @@ Modules
 .. toctree::
     :maxdepth: 3
 
-    BCMBoostPackage
     BCMInstallTargets
+    BCMPackage
     BCMSetupVersion
     BCMTest
     

@@ -15,7 +15,7 @@ endmacro()
 function(bcm_package PACKAGE)
     set(options)
     set(oneValueArgs VERSION VERSION_HEADER VERSION_PREFIX NAMESPACE)
-    set(multiValueArgs SOURCES INCLUDES)
+    set(multiValueArgs SOURCES INCLUDE)
 
     cmake_parse_arguments(PARSE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
@@ -32,7 +32,7 @@ function(bcm_package PACKAGE)
 
     if(PARSE_SOURCES)
         add_library(${PACKAGE} ${PARSE_SOURCES})
-        foreach(INCLUDE ${PARSE_INCLUDES})
+        foreach(INCLUDE ${PARSE_INCLUDE})
             target_include_directories(${PACKAGE} PRIVATE include)
         endforeach()
     else()
@@ -49,7 +49,7 @@ function(bcm_package PACKAGE)
         NAME ${PACKAGE} 
         NAMESPACE ${PARSE_NAMESPACE}
         TARGETS ${PACKAGE} 
-        INCLUDE ${PARSE_INCLUDES} 
+        INCLUDE ${PARSE_INCLUDE} 
         DEPENDS ${DEPENDS_PACKAGES}
     )
     bcm_test_link_libraries(${PACKAGE})
