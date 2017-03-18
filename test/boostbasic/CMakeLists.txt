@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 2.8)
 project(basic)
 
 find_package(BCM)
-include(BCMBoostPackage)
+include(BCMPackage)
 
 bcm_boost_package(basic 
     VERSION 1.0
