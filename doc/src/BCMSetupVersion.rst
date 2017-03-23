@@ -29,5 +29,5 @@ By default, the upper case of the project name is used as a prefix for the versi
 
 .. option:: PARSE_HEADER <header-name>
 
-Rather than set a version and generate a header, this will parse a header with macor that define the version, and use those values to set the version for the project.
+Rather than set a version and generate a header, this will parse a header with macros that define the version, and then use those values to set the version for the project.
 

@@ -16,7 +16,7 @@ bcm_test_link_libraries
 
 .. program:: bcm_test_link_libraries
 
-This is the libraries to be linked the tests targets that are created.
+This sets libraries that the tests will link against by default.
 
 --------
 bcm_test

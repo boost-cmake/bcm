@@ -8,15 +8,15 @@ bcm_install_targets
 
 .. program:: bcm_install_targets
 
-This install the targets specified. It will also install a corresponding cmake package config(which can be found with ``find_package``) to link against the library targets. 
+This installs the targets specified. It will also install a corresponding cmake package config(which can be found with ``find_package``) to link against the library targets. 
 
 .. option:: TARGETS <target-name>...
 
-The name of targets to install.
+The name of the targets to install.
 
 .. option:: INCLUDE <directory>...
 
-Installs include directories. It also makes the include directory available for targets to be installed.
+Include directories to be installed. It also makes the include directory available for targets to be installed.
 
 .. option:: DEPENDS PACKAGE <package-name>...
 
@@ -24,11 +24,11 @@ This will search for these dependent packages in the cmake package config that i
 
 .. option:: NAMESPACE <namespace>
 
-This is the namespace add to the targets that are exported.
+This is the namespace to add to the targets that are exported.
 
 .. option:: COMPATIBILITY <compatibility>
 
-This is version compatibility specified by cmake version config.
+This uses the version compatibility specified by cmake version config.
 
 .. option:: NAME <name>
 

@@ -2,7 +2,7 @@
 BCMProperties
 =============
 
-This module defines serveral properties that can be used to control language features in C++.
+This module defines several properties that can be used to control language features in C++.
 
 --------------
 CXX_EXCEPTIONS
