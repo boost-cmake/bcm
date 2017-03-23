@@ -12,6 +12,11 @@ bcm_package(simple
     INCLUDE include
 )
 
+if(MSVC)
+    add_compile_options(/we4541)
+    add_compile_options(/we4530)
+endif()
+
 bcm_add_test(NAME simpletest SOURCES test.cpp)
 
 bcm_add_test(NAME rttitest SOURCES test.cpp)
