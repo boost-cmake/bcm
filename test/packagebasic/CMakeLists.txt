@@ -13,7 +13,7 @@ bcm_package(basic
 )
 target_link_libraries(basic simple)
 
-bcm_add_test(NAME basictest SOURCES test.cpp)
+bcm_test(NAME basictest SOURCES test.cpp)
 bcm_test_header(NAME basictestheader HEADER basic.h)
 bcm_test_header(NAME basicteststaticheader HEADER basic.h STATIC)
 

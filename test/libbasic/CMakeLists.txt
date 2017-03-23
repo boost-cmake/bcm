@@ -18,6 +18,6 @@ bcm_install_targets(TARGETS basic
         PACKAGE simple 1.0
 )
 
-bcm_add_test(NAME basictest SOURCES test.cpp)
+bcm_test(NAME basictest SOURCES test.cpp)
 target_link_libraries(basictest basic)
 

@@ -13,10 +13,10 @@ add_library(simple INTERFACE)
 
 bcm_install_targets(TARGETS simple INCLUDE include NAME simple)
 
-bcm_add_test(NAME simpletest SOURCES test.cpp)
+bcm_test(NAME simpletest SOURCES test.cpp)
 target_link_libraries(simpletest simple)
 
-bcm_add_test(NAME simpletestcompile SOURCES compiletest.cpp COMPILE_ONLY)
+bcm_test(NAME simpletestcompile SOURCES compiletest.cpp COMPILE_ONLY)
 target_link_libraries(simpletestcompile simple)
 
 bcm_test_header(NAME simpletestheader HEADER simple.h)

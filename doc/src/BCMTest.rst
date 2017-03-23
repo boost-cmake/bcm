@@ -18,21 +18,21 @@ bcm_test_link_libraries
 
 This is the libraries to be linked the tests targets that are created.
 
-------------
-bcm_add_test
-------------
+--------
+bcm_test
+--------
 
-.. program:: bcm_add_test
+.. program:: bcm_test
 
-This adds a test to ran or compiled.
+This setups a test. By default, a test will be built and executed.
 
 .. option:: SOURCES <source-files>...
 
-Source files to be compiled for the tests.
+Source files to be compiled for the test.
 
 .. option:: CONTENT <content>
 
-This a string that will be used to create a test to compiled and/or ran.
+This a string that will be used to create a test to be compiled and/or ran.
 
 .. option:: NAME <name>
 
@@ -40,7 +40,7 @@ Name of the test.
 
 .. option:: COMPILE_ONLY
 
-This just compiles the test. By default, tests are ran.
+This just compiles the test instead of running it. As such, a ``main`` function is not required.
 
 .. option:: WILL_FAIL
 

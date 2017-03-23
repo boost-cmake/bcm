@@ -16,6 +16,6 @@ target_link_libraries(basicapp simple)
 bcm_install_targets(TARGETS basicapp)
 # install(TARGETS basicapp DESTINATION bin)
 
-bcm_add_test(NAME basciapptest SOURCES main.cpp)
+bcm_test(NAME basciapptest SOURCES main.cpp)
 target_link_libraries(basciapptest simple)
 

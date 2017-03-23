@@ -8,7 +8,7 @@ bcm_boost_package(simple
     VERSION 1.0
 )
 
-bcm_add_test(NAME simpletest SOURCES test.cpp)
+bcm_test(NAME simpletest SOURCES test.cpp)
 
 bcm_test_header(NAME simpletestheader HEADER simple.h)
 

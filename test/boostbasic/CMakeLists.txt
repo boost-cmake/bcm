@@ -12,7 +12,7 @@ bcm_boost_package(basic
         lib/basic.cpp
 )
 
-bcm_add_test(NAME basictest SOURCES test.cpp)
+bcm_test(NAME basictest SOURCES test.cpp)
 
 bcm_test_header(NAME basictestheader HEADER basic.h)
 

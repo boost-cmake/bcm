@@ -14,9 +14,9 @@ bcm_test_link_libraries(simple)
 
 bcm_install_targets(TARGETS simple INCLUDE include)
 
-bcm_add_test(NAME simpletest SOURCES test.cpp)
+bcm_test(NAME simpletest SOURCES test.cpp)
 
-bcm_add_test(NAME simpletestcompile SOURCES compiletest.cpp COMPILE_ONLY)
+bcm_test(NAME simpletestcompile SOURCES compiletest.cpp COMPILE_ONLY)
 
 bcm_test_header(NAME simpletestheader HEADER simple.h)
 

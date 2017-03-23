@@ -31,7 +31,7 @@ function(bcm_mark_as_test)
     endforeach()
 endfunction(bcm_mark_as_test)
 
-function(bcm_add_test)
+function(bcm_test)
     set(options COMPILE_ONLY WILL_FAIL NO_TEST_LIBS)
     set(oneValueArgs NAME)
     set(multiValueArgs SOURCES CONTENT)
@@ -72,7 +72,7 @@ function(bcm_add_test)
     if(NOT PARSE_NO_TEST_LIBS)
         target_link_libraries(${PARSE_NAME} _bcm_test_dependencies)
     endif()
-endfunction(bcm_add_test)
+endfunction(bcm_test)
 
 function(bcm_test_header)
     set(options STATIC NO_TEST_LIBS)
@@ -88,12 +88,12 @@ function(bcm_test_header)
         file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/header-static-include-${PARSE_NAME}.cpp 
             "#include <${PARSE_HEADER}>\n"
         )
-        bcm_add_test(NAME ${PARSE_NAME} SOURCES
+        bcm_test(NAME ${PARSE_NAME} SOURCES
             ${CMAKE_CURRENT_BINARY_DIR}/header-main-include-${PARSE_NAME}.cpp 
             ${CMAKE_CURRENT_BINARY_DIR}/header-static-include-${PARSE_NAME}.cpp
         )
     else()
-        bcm_add_test(NAME ${PARSE_NAME} CONTENT
+        bcm_test(NAME ${PARSE_NAME} CONTENT
             "#include <${PARSE_HEADER}>\nint main() {}\n"
         )
     endif()
