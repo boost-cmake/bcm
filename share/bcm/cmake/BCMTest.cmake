@@ -12,7 +12,9 @@ if(NOT TARGET tests)
     add_dependencies(check tests)
 endif()
 
-add_library(_bcm_test_dependencies INTERFACE)
+if(NOT TARGET _bcm_test_dependencies)
+    add_library(_bcm_test_dependencies INTERFACE)
+endif()
 
 function(bcm_test_link_libraries)
     target_link_libraries(_bcm_test_dependencies INTERFACE ${ARGN})
