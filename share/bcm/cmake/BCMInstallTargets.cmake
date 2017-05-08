@@ -1,204 +1,41 @@
 include(CMakeParseArguments)
-include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 
-set(_bcm_tmp_list_marker "@@__bcm_tmp_list_marker__@@")
-
-function(bcm_list_split LIST ELEMENT OUTPUT_LIST)
-    string(REPLACE ";" ${_bcm_tmp_list_marker} TMPLIST "${${LIST}}")
-    string(REPLACE "${_bcm_tmp_list_marker}${ELEMENT}${_bcm_tmp_list_marker}" ";" TMPLIST "${TMPLIST}")
-    string(REPLACE "${ELEMENT}${_bcm_tmp_list_marker}" "" TMPLIST "${TMPLIST}")
-    string(REPLACE "${_bcm_tmp_list_marker}${ELEMENT}" "" TMPLIST "${TMPLIST}")
-    set(LIST_PREFIX _bcm_list_split_${OUTPUT_LIST}_SUBLIST)
-    set(count 0)
-    set(result)
-    foreach(SUBLIST ${TMPLIST})
-        string(REPLACE ${_bcm_tmp_list_marker} ";" TMPSUBLIST "${SUBLIST}")
-        math(EXPR count "${count}+1")
-        set(${LIST_PREFIX}_${count} "${TMPSUBLIST}" PARENT_SCOPE)
-        list(APPEND result ${LIST_PREFIX}_${count})
-    endforeach()
-    set(${OUTPUT_LIST} "${result}" PARENT_SCOPE)
-endfunction()
-
-function(bcm_write_package_template_header NAME)
-    file(WRITE ${NAME} "
-
-@PACKAGE_INIT@
-
-include(CMakeFindDependencyMacro OPTIONAL RESULT_VARIABLE _CMakeFindDependencyMacro_FOUND)
-if (NOT _CMakeFindDependencyMacro_FOUND)
-    macro(find_dependency dep)
-        if (NOT \${dep}_FOUND)
-            set(cmake_fd_version)
-            if (\${ARGC} GREATER 1)
-                set(cmake_fd_version \${ARGV1})
-            endif()
-            set(cmake_fd_exact_arg)
-            if(\${CMAKE_FIND_PACKAGE_NAME}_FIND_VERSION_EXACT)
-                set(cmake_fd_exact_arg EXACT)
-            endif()
-            set(cmake_fd_quiet_arg)
-            if(\${CMAKE_FIND_PACKAGE_NAME}_FIND_QUIETLY)
-                set(cmake_fd_quiet_arg QUIET)
-            endif()
-            set(cmake_fd_required_arg)
-            if(\${CMAKE_FIND_PACKAGE_NAME}_FIND_REQUIRED)
-                set(cmake_fd_required_arg REQUIRED)
-            endif()
-            find_package(\${dep} \${cmake_fd_version}
-                \${cmake_fd_exact_arg}
-                \${cmake_fd_quiet_arg}
-                \${cmake_fd_required_arg}
-            )
-            string(TOUPPER \${dep} cmake_dep_upper)
-            if (NOT \${dep}_FOUND AND NOT \${cmake_dep_upper}_FOUND)
-                set(\${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE \"\${CMAKE_FIND_PACKAGE_NAME} could not be found because dependency \${dep} could not be found.\")
-                set(\${CMAKE_FIND_PACKAGE_NAME}_FOUND False)
-                return()
-            endif()
-            set(cmake_fd_version)
-            set(cmake_fd_required_arg)
-            set(cmake_fd_quiet_arg)
-            set(cmake_fd_exact_arg)
-        endif()
-    endmacro()
-endif()
-
-")
-endfunction()
-
-function(bcm_write_package_template_function FILENAME NAME)
-    string(REPLACE ";" " " ARGS "${ARGN}")
-    file(APPEND ${FILENAME}
-"
-${NAME}(${ARGS})
-")
-endfunction()
 
 function(bcm_install_targets)
     set(options)
-    set(oneValueArgs NAMESPACE COMPATIBILITY NAME)
-    set(multiValueArgs TARGETS INCLUDE DEPENDS)
+    set(oneValueArgs EXPORT)
+    set(multiValueArgs TARGETS INCLUDE)
 
     cmake_parse_arguments(PARSE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-    set(LIB_TARGETS)
-    set(EXPORT_LIB_TARGETS)
-    set(EXE_TARGETS)
+    string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
+    set(EXPORT_FILE ${PROJECT_NAME_LOWER}-targets)
+    if(PARSE_EXPORT)
+        set(EXPORT_FILE ${PARSE_EXPORT})
+    endif()
 
+    set(BIN_INSTALL_DIR ${CMAKE_INSTALL_BINDIR})
+    set(LIB_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR})
+    set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
+    
     foreach(TARGET ${PARSE_TARGETS})
         foreach(INCLUDE ${PARSE_INCLUDE})
             get_filename_component(INCLUDE_PATH ${INCLUDE} ABSOLUTE)
             target_include_directories(${TARGET} INTERFACE $<BUILD_INTERFACE:${INCLUDE_PATH}>)
         endforeach()
         target_include_directories(${TARGET} INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
-        get_target_property(TARGET_TYPE ${TARGET} TYPE)
-        if(${TARGET_TYPE} MATCHES "LIBRARY")
-            list(APPEND LIB_TARGETS ${TARGET})
-            get_target_property(TARGET_NAME ${TARGET} EXPORT_NAME)
-            if(NOT TARGET_NAME)
-                set(TARGET_NAME ${TARGET})
-            endif()
-            if(PARSE_NAMESPACE)
-                list(APPEND EXPORT_LIB_TARGETS "${PARSE_NAMESPACE}${TARGET_NAME}")
-            else()
-                list(APPEND EXPORT_LIB_TARGETS ${TARGET_NAME})
-            endif()
-        else()
-            list(APPEND EXE_TARGETS ${TARGET})
-        endif()
     endforeach()
-
-    set(PACKAGE_NAME ${PROJECT_NAME})
-    if(PARSE_NAME)
-        set(PACKAGE_NAME ${PARSE_NAME})
-    endif()
-
-    string(TOUPPER ${PACKAGE_NAME} PACKAGE_NAME_UPPER)
-    string(TOLOWER ${PACKAGE_NAME} PROJECT_NAME_LOWER)
-
-    set(TARGET_FILE ${PROJECT_NAME_LOWER}-targets)
-    set(CONFIG_NAME ${PROJECT_NAME_LOWER}-config)
-    set(TARGET_VERSION ${PROJECT_VERSION})
-
-    set(LIB_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR})
-    set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
-    set(CONFIG_PACKAGE_INSTALL_DIR ${LIB_INSTALL_DIR}/cmake/${PROJECT_NAME_LOWER})
-
-    set(CONFIG_TEMPLATE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME_LOWER}-config.cmake.in")
-
-    bcm_write_package_template_header(${CONFIG_TEMPLATE})
-
-    foreach(NAME ${PACKAGE_NAME} ${PACKAGE_NAME_UPPER} ${PROJECT_NAME_LOWER})
-        bcm_write_package_template_function(${CONFIG_TEMPLATE} set_and_check ${NAME}_INCLUDE_DIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
-        bcm_write_package_template_function(${CONFIG_TEMPLATE} set_and_check ${NAME}_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
-    endforeach()
-
-    if(PARSE_DEPENDS)
-        bcm_list_split(PARSE_DEPENDS PACKAGE DEPENDS_LIST)
-        foreach(DEPEND ${DEPENDS_LIST})
-            bcm_write_package_template_function(${CONFIG_TEMPLATE} find_dependency ${${DEPEND}})
-        endforeach()
-    endif()
-
-    if(LIB_TARGETS)
-        bcm_write_package_template_function(${CONFIG_TEMPLATE} include "\${CMAKE_CURRENT_LIST_DIR}/${TARGET_FILE}.cmake")
-    endif()
-    foreach(NAME ${PACKAGE_NAME} ${PACKAGE_NAME_UPPER} ${PROJECT_NAME_LOWER})
-        bcm_write_package_template_function(${CONFIG_TEMPLATE} set ${NAME}_LIBRARIES ${EXPORT_LIB_TARGETS})
-        bcm_write_package_template_function(${CONFIG_TEMPLATE} set ${NAME}_LIBRARY ${EXPORT_LIB_TARGETS})
-    endforeach()
-
-    configure_package_config_file(
-        ${CONFIG_TEMPLATE}
-        ${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_NAME}.cmake
-        INSTALL_DESTINATION ${CONFIG_PACKAGE_INSTALL_DIR}
-        PATH_VARS LIB_INSTALL_DIR INCLUDE_INSTALL_DIR
-    )
-    set(COMPATIBILITY_ARG SameMajorVersion)
-    if(PARSE_COMPATIBILITY)
-        set(COMPATIBILITY_ARG ${PARSE_COMPATIBILITY})
-    endif()
-    write_basic_package_version_file(
-        ${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_NAME}-version.cmake
-        VERSION ${TARGET_VERSION}
-        COMPATIBILITY ${COMPATIBILITY_ARG}
-    )
 
     foreach(INCLUDE ${PARSE_INCLUDE})
-        install(DIRECTORY ${INCLUDE}/ DESTINATION include)
+        install(DIRECTORY ${INCLUDE}/ DESTINATION ${INCLUDE_INSTALL_DIR})
     endforeach()
 
-    if(LIB_TARGETS)
-        install(TARGETS ${LIB_TARGETS} EXPORT ${TARGET_FILE}
-            RUNTIME DESTINATION bin
-            LIBRARY DESTINATION ${LIB_INSTALL_DIR}
-            ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
-        )
-
-        set(NAMESPACE_ARG)
-        if(PARSE_NAMESPACE)
-            set(NAMESPACE_ARG "NAMESPACE;${PARSE_NAMESPACE}")
-        endif()
-        install( EXPORT ${TARGET_FILE}
-            DESTINATION
-            ${CONFIG_PACKAGE_INSTALL_DIR}
-            ${NAMESPACE_ARG}
-        )
-    
-        install( FILES
-            ${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_NAME}.cmake
-            ${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_NAME}-version.cmake
-            DESTINATION
-            ${CONFIG_PACKAGE_INSTALL_DIR})
-    endif()
-
-    if(EXE_TARGETS)
-        install(TARGETS ${EXE_TARGETS}
-            DESTINATION bin
-        )
-    endif()
+    install(TARGETS ${PARSE_TARGETS} 
+        EXPORT ${EXPORT_FILE}
+        RUNTIME DESTINATION ${BIN_INSTALL_DIR}
+        LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+        ARCHIVE DESTINATION ${LIB_INSTALL_DIR})
 
 endfunction()
 

@@ -4,6 +4,7 @@ project(simple)
 find_package(BCM)
 
 include(BCMInstallTargets)
+include(BCMPackageConfigHelpers)
 include(BCMSetupVersion)
 include(BCMTest)
 

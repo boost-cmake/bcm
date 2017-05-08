@@ -1,5 +1,6 @@
 
 include(BCMInstallTargets)
+include(BCMPackageConfigHelpers)
 include(BCMSetupVersion)
 include(BCMTest)
 
@@ -46,10 +47,13 @@ function(bcm_package PACKAGE)
     endforeach()
 
     bcm_install_targets(
-        NAME ${PACKAGE} 
-        NAMESPACE ${PARSE_NAMESPACE}
-        TARGETS ${PACKAGE} 
+        TARGETS ${PACKAGE}
         INCLUDE ${PARSE_INCLUDE} 
+    )
+    bcm_auto_export(
+        NAME ${PACKAGE} 
+        TARGETS ${PACKAGE}
+        NAMESPACE ${PARSE_NAMESPACE}
         DEPENDS ${DEPENDS_PACKAGES}
     )
     bcm_test_link_libraries(${PACKAGE})
@@ -92,10 +96,13 @@ function(bcm_boost_package PACKAGE)
     endforeach()
 
     bcm_install_targets(
+        TARGETS boost_${PACKAGE} 
+        INCLUDE include 
+    )
+    bcm_auto_export(
         NAME boost_${PACKAGE} 
         NAMESPACE boost::
         TARGETS boost_${PACKAGE} 
-        INCLUDE include 
         DEPENDS ${DEPENDS_PACKAGES}
     )
     bcm_test_link_libraries(boost_${PACKAGE})

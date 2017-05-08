@@ -4,6 +4,7 @@ project(basic)
 find_package(BCM)
 
 include(BCMInstallTargets)
+include(BCMPackageConfigHelpers)
 include(BCMTest)
 include(BCMSetupVersion)
 
@@ -13,7 +14,8 @@ find_package(simple)
 add_library(basic main.cpp)
 target_link_libraries(basic ${simple_LIBRARIES})
 
-bcm_install_targets(TARGETS basic
+bcm_install_targets(TARGETS basic)
+bcm_auto_export(TARGETS basic
     DEPENDS
         PACKAGE simple 1.0
 )

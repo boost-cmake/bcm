@@ -4,6 +4,7 @@ project(simple)
 find_package(BCM)
 
 include(BCMInstallTargets)
+include(BCMPackageConfigHelpers)
 include(BCMSetupVersion)
 include(BCMTest)
 
@@ -13,6 +14,7 @@ add_library(simple INTERFACE)
 bcm_test_link_libraries(simple)
 
 bcm_install_targets(TARGETS simple INCLUDE include)
+bcm_auto_export(TARGETS simple)
 
 bcm_test(NAME simpletest SOURCES test.cpp)
 
