@@ -1,6 +1,7 @@
 
 include(CMakeParseArguments)
 include(GNUInstallDirs)
+include(BCMProperties)
 
 function(bcm_generate_pkgconfig_file)
     set(options)
@@ -21,8 +22,8 @@ function(bcm_generate_pkgconfig_file)
     set(LIBS)
 
     foreach(TARGET ${PARSE_TARGETS})
-        get_property(TARGET_NAME TARGET ${PARSE_TARGET} PROPERTY NAME)
-        get_property(TARGET_TYPE TARGET ${PARSE_TARGET} PROPERTY TYPE)
+        get_property(TARGET_NAME TARGET ${TARGET} PROPERTY NAME)
+        get_property(TARGET_TYPE TARGET ${TARGET} PROPERTY TYPE)
         if(NOT TARGET_TYPE STREQUAL "INTERFACE_LIBRARY")
             set(LIBS "${LIBS} -l${TARGET_NAME}")
         endif()
@@ -51,4 +52,98 @@ Requires: ${PARSE_REQUIRES}
 "
   )
 
+endfunction()
+
+function(bcm_preprocess_pkgconfig_property VAR TARGET PROP)
+    get_target_property(OUT_PROP ${TARGET} ${PROP})
+    string(REPLACE "$<BUILD_INTERFACE:" "$<0:" OUT_PROP "${OUT_PROP}")
+    string(REPLACE "$<INSTALL_INTERFACE:" "$<1:" OUT_PROP "${OUT_PROP}")
+
+    string(REPLACE "$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}" "\${includedir}" OUT_PROP "${OUT_PROP}")
+    string(REPLACE "$<INSTALL_PREFIX>/${CMAKE_INSTALL_LIBDIR}" "\${libdir}" OUT_PROP "${OUT_PROP}")
+    string(REPLACE "$<INSTALL_PREFIX>" "\${prefix}" OUT_PROP "${OUT_PROP}")
+
+    set(${VAR} ${OUT_PROP} PARENT_SCOPE)
+
+endfunction()
+
+function(bcm_auto_pkgconfig TARGET)
+    set(options)
+    set(oneValueArgs NAME)
+    set(multiValueArgs REQUIRES)
+
+    cmake_parse_arguments(PARSE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    set(LIBS)
+    set(CFLAGS)
+
+    get_property(TARGET_NAME TARGET ${TARGET} PROPERTY NAME)
+    get_property(TARGET_TYPE TARGET ${TARGET} PROPERTY TYPE)
+    get_property(TARGET_DESCRIPTION TARGET ${TARGET} PROPERTY INTERFACE_DESCRIPTION)
+    get_property(TARGET_URL TARGET ${TARGET} PROPERTY INTERFACE_URL)
+    if(NOT TARGET_TYPE STREQUAL "INTERFACE_LIBRARY")
+        set(LIBS "${LIBS} -l${TARGET_NAME}")
+    endif()
+    
+    bcm_preprocess_pkgconfig_property(LINK_LIBS ${TARGET} INTERFACE_LINK_LIBRARIES)
+    foreach(LIB LINK_LIBS)
+        if(NOT TARGET ${LIB})
+            set(LIBS "${LIBS} ${LIB}")
+        endif()
+    endforeach()
+
+    bcm_preprocess_pkgconfig_property(INCLUDE_DIRS ${TARGET} INTERFACE_INCLUDE_DIRECTORIES)
+    if(INCLUDE_DIRS)
+        set(CFLAGS "${CFLAGS} $<$<BOOL:${INCLUDE_DIRS}>:-I$<JOIN:${INCLUDE_DIRS}, -I>>")
+    endif()
+
+    bcm_preprocess_pkgconfig_property(COMPILE_DEFS ${TARGET} INTERFACE_COMPILE_DEFINITIONS)
+    if(COMPILE_DEFS)
+        set(CFLAGS "${CFLAGS} $<$<BOOL:${COMPILE_DEFS}>:-D$<JOIN:${COMPILE_DEFS}, -D>>")
+    endif()
+
+    bcm_preprocess_pkgconfig_property(COMPILE_OPTS ${TARGET} INTERFACE_COMPILE_OPTIONS)
+    if(COMPILE_OPTS)
+        set(CFLAGS "${CFLAGS} $<$<BOOL:${COMPILE_OPTS}>:$<JOIN:${COMPILE_OPTS}, >>")
+    endif()
+
+    set(CONTENT)
+
+    if(TARGET_DESCRIPTION)
+        set(CONTENT "${CONTENT}\nDescription: ${TARGET_DESCRIPTION}")
+    endif()
+
+    if(TARGET_URL)
+        set(CONTENT "${CONTENT}\nUrl: ${TARGET_URL}")
+    endif()
+
+    if(CFLAGS)
+        set(CONTENT "${CONTENT}\nCflags: ${CFLAGS}")
+    endif()
+
+    if(LIBS)
+        set(CONTENT "${CONTENT}\nLibs: -L\${libdir} ${LIBS}")
+    endif()
+
+    if(PARSE_REQUIRES)
+        set(CONTENT "${CONTENT}\nRequires: ${PARSE_REQUIRES}")
+    endif()
+
+    set(PKG_NAME ${PROJECT_NAME})
+    if(PARSE_NAME)
+        set(PKG_NAME ${PARSE_NAME})
+    endif()
+
+    file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${PKG_NAME}.pc CONTENT
+"
+prefix=${CMAKE_INSTALL_PREFIX}
+exec_prefix=\${prefix}
+libdir=\${exec_prefix}/${CMAKE_INSTALL_LIBDIR}
+includedir=\${exec_prefix}/${CMAKE_INSTALL_INCLUDEDIR}
+Name: ${PKG_NAME}
+Version: ${PROJECT_VERSION}
+${CONTENT}
+"
+  )
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PKG_NAME}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 endfunction()

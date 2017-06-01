@@ -3,6 +3,7 @@ project(basic)
 
 find_package(BCM)
 include(BCMPackage)
+include(BCMGeneratePkgConfigFile)
 bcm_find_package(simple)
 
 bcm_package(basic 
@@ -12,6 +13,7 @@ bcm_package(basic
         main.cpp
 )
 target_link_libraries(basic simple)
+bcm_auto_pkgconfig(basic REQUIRES simple)
 
 bcm_test(NAME basictest SOURCES test.cpp)
 bcm_test_header(NAME basictestheader HEADER basic.h)

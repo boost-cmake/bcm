@@ -7,6 +7,7 @@ include(BCMInstallTargets)
 include(BCMPackageConfigHelpers)
 include(BCMSetupVersion)
 include(BCMTest)
+include(BCMGeneratePkgConfigFile)
 
 bcm_setup_version(VERSION 1.0 GENERATE_HEADER simpleversion.hpp)
 
@@ -15,6 +16,7 @@ bcm_test_link_libraries(simple)
 
 bcm_install_targets(TARGETS simple INCLUDE include)
 bcm_auto_export(TARGETS simple)
+bcm_auto_pkgconfig(simple)
 
 bcm_test(NAME simpletest SOURCES test.cpp)
 

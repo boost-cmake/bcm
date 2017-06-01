@@ -54,3 +54,13 @@ else()
     $<$<STREQUAL:$<UPPER_CASE:$<TARGET_PROPERTY:CXX_STATIC_RUNTIME>>,ON>:-static>
   )
 endif()
+
+define_property(TARGET PROPERTY "INTERFACE_DESCRIPTION"
+  BRIEF_DOCS "Description of the target"
+  FULL_DOCS "Description of the target"
+)
+
+define_property(TARGET PROPERTY "INTERFACE_URL"
+  BRIEF_DOCS "URL to access download the library or docs"
+  FULL_DOCS "URL to access download the library or docs"
+)
