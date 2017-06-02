@@ -20,6 +20,16 @@ function(bcm_test_link_libraries)
     target_link_libraries(_bcm_test_dependencies INTERFACE ${ARGN})
 endfunction()
 
+define_property(GLOBAL PROPERTY "BCM_SOURCE_RUN_TESTS"
+  BRIEF_DOCS "Tests created with bcm_test that uses source files"
+  FULL_DOCS "Tests created with bcm_test that uses source files"
+)
+
+define_property(GLOBAL PROPERTY "BCM_SOURCE_COMPILE_TESTS"
+  BRIEF_DOCS "Tests created with bcm_test that uses source files"
+  FULL_DOCS "Tests created with bcm_test that uses source files"
+)
+
 function(bcm_mark_as_test)
     foreach(TEST_TARGET ${ARGN})
         if (NOT BUILD_TESTING)
@@ -44,6 +54,12 @@ function(bcm_test)
     if(PARSE_CONTENT)
         file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/generated-${PARSE_NAME}.cpp "${PARSE_CONTENT}")
         set(SOURCES ${CMAKE_CURRENT_BINARY_DIR}/generated-${PARSE_NAME}.cpp)
+    else()
+        if(PARSE_COMPILE_ONLY)
+            set_property(GLOBAL APPEND PROPERTY BCM_SOURCE_COMPILE_TESTS ${PARSE_NAME})
+        else()
+            set_property(GLOBAL APPEND PROPERTY BCM_SOURCE_RUN_TESTS ${PARSE_NAME})
+        endif()
     endif()
 
     if(PARSE_COMPILE_ONLY)
