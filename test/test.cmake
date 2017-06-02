@@ -7,6 +7,7 @@ set(TMP_DIR ${CMAKE_ARGV4}-${_TEST_RAND})
 file(MAKE_DIRECTORY ${TMP_DIR})
 set(PREFIX ${TMP_DIR}/usr)
 set(BUILDS_DIR ${TMP_DIR}/builds)
+# message("TMP_DIR: ${TMP_DIR}")
 
 macro(test_expect_eq X Y)
     if(NOT ${X} EQUAL ${Y})

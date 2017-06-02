@@ -5,7 +5,7 @@ include(BCMProperties)
 
 function(bcm_generate_pkgconfig_file)
     set(options)
-    set(oneValueArgs NAME LIB_DIR INCLUDE_DIR)
+    set(oneValueArgs NAME LIB_DIR INCLUDE_DIR DESCRIPTION)
     set(multiValueArgs TARGETS CFLAGS LIBS REQUIRES)
 
     cmake_parse_arguments(PARSE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
@@ -20,6 +20,10 @@ function(bcm_generate_pkgconfig_file)
     endif()
 
     set(LIBS)
+    set(DESCRIPTION "No description")
+    if(PARSE_DESCRIPTION)
+        set(DESCRIPTION ${PARSE_DESCRIPTION})
+    endif()
 
     foreach(TARGET ${PARSE_TARGETS})
         get_property(TARGET_NAME TARGET ${TARGET} PROPERTY NAME)
@@ -45,6 +49,7 @@ exec_prefix=\${prefix}
 libdir=\${exec_prefix}/${LIB_DIR}
 includedir=\${exec_prefix}/${INCLUDE_DIR}
 Name: ${PKG_NAME}
+Description: ${DESCRIPTION}
 Version: ${PROJECT_VERSION}
 Cflags: -I\${includedir} ${PARSE_CFLAGS}
 ${LIBS}
@@ -76,6 +81,7 @@ function(bcm_auto_pkgconfig TARGET)
 
     set(LIBS)
     set(CFLAGS)
+    set(DESCRIPTION "No description")
 
     get_property(TARGET_NAME TARGET ${TARGET} PROPERTY NAME)
     get_property(TARGET_TYPE TARGET ${TARGET} PROPERTY TYPE)
@@ -110,7 +116,7 @@ function(bcm_auto_pkgconfig TARGET)
     set(CONTENT)
 
     if(TARGET_DESCRIPTION)
-        set(CONTENT "${CONTENT}\nDescription: ${TARGET_DESCRIPTION}")
+        set(DESCRIPTION "${TARGET_DESCRIPTION}")
     endif()
 
     if(TARGET_URL)
@@ -141,6 +147,7 @@ exec_prefix=\${prefix}
 libdir=\${exec_prefix}/${CMAKE_INSTALL_LIBDIR}
 includedir=\${exec_prefix}/${CMAKE_INSTALL_INCLUDEDIR}
 Name: ${PKG_NAME}
+Description: ${DESCRIPTION}
 Version: ${PROJECT_VERSION}
 ${CONTENT}
 "
