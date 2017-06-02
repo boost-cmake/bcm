@@ -19,7 +19,7 @@ function(bcm_b2_generate_test_jam OUTPUT)
         set(CONTENT "${CONTENT}\n${EXE_TEST}")
     endforeach()
     foreach(COMPILE_TEST ${COMPILE_TESTS})
-        bcm_b2_generate_test_line(EXE_TEST ${RUN_TEST} run)
+        bcm_b2_generate_test_line(EXE_TEST ${COMPILE_TEST} compile)
         set(CONTENT "${CONTENT}\n${EXE_TEST}")
     endforeach()
 
