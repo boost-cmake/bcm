@@ -7,6 +7,7 @@ Modules
     BCMInstallTargets
     BCMPackage
     BCMPackageConfigHelpers
+    BCMPkgConfig
     BCMProperties
     BCMSetupVersion
     BCMTest
