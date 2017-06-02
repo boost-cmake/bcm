@@ -18,6 +18,10 @@ environment:
 matrix:
   fast_finish: true
 
+install:
+  # Install pkg-config from chocolatey
+  - cinst pkgconfiglite
+
 build_script:
  - cmd: set PATH=C:\Program Files (x86)\CMake\bin;%PATH%
  - cmd: set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
