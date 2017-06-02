@@ -7,7 +7,7 @@ include(BCMInstallTargets)
 include(BCMPackageConfigHelpers)
 include(BCMSetupVersion)
 include(BCMTest)
-include(BCMGeneratePkgConfigFile)
+include(BCMPkgConfig)
 
 set(_pkgconfig_path)
 foreach(PATH ${CMAKE_PREFIX_PATH})

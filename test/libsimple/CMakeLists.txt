@@ -7,7 +7,7 @@ include(BCMInstallTargets)
 include(BCMPackageConfigHelpers)
 include(BCMSetupVersion)
 include(BCMTest)
-include(BCMGeneratePkgConfigFile)
+include(BCMPkgConfig)
 
 bcm_setup_version(VERSION 1.0 GENERATE_HEADER simpleversion.hpp)
 

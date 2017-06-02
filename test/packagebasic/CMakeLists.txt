@@ -3,7 +3,7 @@ project(basic)
 
 find_package(BCM)
 include(BCMPackage)
-include(BCMGeneratePkgConfigFile)
+include(BCMPkgConfig)
 bcm_find_package(simple)
 
 bcm_package(basic 
