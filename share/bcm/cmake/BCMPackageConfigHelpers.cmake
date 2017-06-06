@@ -171,7 +171,7 @@ endfunction()
 function(bcm_auto_export)
     set(options)
     set(oneValueArgs NAMESPACE EXPORT NAME COMPATIBILITY)
-    set(multiValueArgs TARGETS DEPENDS)
+    set(multiValueArgs TARGETS DEPENDS INCLUDE)
 
     cmake_parse_arguments(PARSE "${options}" "${oneValueArgs}" "${multiValueArgs}"  ${ARGN})
 
@@ -212,6 +212,12 @@ function(bcm_auto_export)
             bcm_write_package_template_function(${CONFIG_TEMPLATE} find_dependency ${${DEPEND}})
         endforeach()
     endif()
+
+    foreach(INCLUDE ${PARSE_INCLUDE})
+        install(FILES ${INCLUDE} DESTINATION ${CONFIG_PACKAGE_INSTALL_DIR})
+        get_filename_component(INCLUDE_BASE ${INCLUDE} NAME)
+        bcm_write_package_template_function(${CONFIG_TEMPLATE} include "\${CMAKE_CURRENT_LIST_DIR}/${INCLUDE_BASE}")
+    endforeach()
 
     if(PARSE_TARGETS)
         # Compute targets imported name
