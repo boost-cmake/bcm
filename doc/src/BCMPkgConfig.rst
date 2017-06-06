@@ -42,22 +42,18 @@ Additional libraries to be linked.
 
 List of other pkgconfig packages that this module depends on.
 
----------------------------
+------------------
 bcm_auto_pkgconfig
----------------------------
+------------------
 
 .. program:: bcm_auto_pkgconfig
 
 This will auto generate pkgconfig from a given target. All the compiler and linker flags come from the target.
 
-.. option:: <target>
-
-The first parameter is target that will be used to generate the pkgconfig file.
-
 .. option:: NAME <name>
 
 This is the name of the pkgconfig module. By default, this will use the project name.
 
-.. option:: REQUIRES <packages>...
+.. option:: TARGET <TARGET>
 
-List of other pkgconfig packages that this module depends on.
+This is the target which will be used to set the various pkgconfig fields. This is optional. If a target is not given it will use the target define by either ``bcm_package`` or ``bcm_boost_package``.
