@@ -3,7 +3,13 @@ include(BCMInstallTargets)
 include(BCMPackageConfigHelpers)
 include(BCMSetupVersion)
 include(BCMTest)
+include(BCMProperties)
 
+function(bcm_mark_as_package TARGET)
+    set_property(GLOBAL PROPERTY BCM_PACKAGE_TARGET ${TARGET})
+endfunction()
+
+# TODO: Make this a global property
 if(NOT DEFINED _bcm_public_packages)
     set(_bcm_public_packages)
 endif()
@@ -57,6 +63,7 @@ function(bcm_package PACKAGE)
         DEPENDS ${DEPENDS_PACKAGES}
     )
     bcm_test_link_libraries(${PACKAGE})
+    bcm_mark_as_package(${PACKAGE})
 
 endfunction()
 
@@ -106,5 +113,6 @@ function(bcm_boost_package PACKAGE)
         DEPENDS ${DEPENDS_PACKAGES}
     )
     bcm_test_link_libraries(boost_${PACKAGE})
+    bcm_mark_as_package(boost_${PACKAGE})
 
 endfunction()

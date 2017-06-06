@@ -55,12 +55,27 @@ else()
   )
 endif()
 
+define_property(GLOBAL PROPERTY "BCM_PACKAGE_TARGET"
+  BRIEF_DOCS "The package's main target."
+  FULL_DOCS "The package's main target."
+)
+
 define_property(TARGET PROPERTY "INTERFACE_DESCRIPTION"
   BRIEF_DOCS "Description of the target"
   FULL_DOCS "Description of the target"
 )
 
 define_property(TARGET PROPERTY "INTERFACE_URL"
-  BRIEF_DOCS "URL to access download the library or docs"
-  FULL_DOCS "URL to access download the library or docs"
+  BRIEF_DOCS "An URL where people can get more information about and download the package."
+  FULL_DOCS "An URL where people can get more information about and download the package."
+)
+
+define_property(TARGET PROPERTY "INTERFACE_PKG_CONFIG_REQUIRES"
+  BRIEF_DOCS "A list of packages required by this package. The versions of these packages may be specified using the comparison operators =, <, >, <= or >=."
+  FULL_DOCS "A list of packages required by this package. The versions of these packages may be specified using the comparison operators =, <, >, <= or >=."
+)
+
+define_property(TARGET PROPERTY "INTERFACE_PKG_CONFIG_NAME"
+  BRIEF_DOCS "Pkgconfig name to use this target"
+  FULL_DOCS "Pkgconfig name to use this target"
 )

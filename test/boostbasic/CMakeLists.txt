@@ -3,6 +3,7 @@ project(basic)
 
 find_package(BCM)
 include(BCMPackage)
+include(BCMPkgConfig)
 
 bcm_boost_package(basic 
     VERSION 1.0
@@ -11,7 +12,7 @@ bcm_boost_package(basic
     SOURCES
         lib/basic.cpp
 )
-
+bcm_auto_pkgconfig()
 bcm_test(NAME basictest SOURCES test.cpp)
 
 bcm_test_header(NAME basictestheader HEADER basic.h)

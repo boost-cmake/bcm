@@ -1,1 +1,1 @@
-install_dir(${TEST_DIR}/properties)
+install_dir(${TEST_DIR}/properties TARGETS check)

@@ -1,1 +1,1 @@
-install_dir(${TEST_DIR}/parseversion)
+install_dir(${TEST_DIR}/parseversion TARGETS check)

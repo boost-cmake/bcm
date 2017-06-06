@@ -32,8 +32,15 @@ pkg_check_modules(PKGS REQUIRED ${PKG_CONFIG_MODULES})
 bcm_setup_version(VERSION 1.0 GENERATE_HEADER pkgconfigcheckversion.hpp)
 
 add_library(pkgconfigcheck INTERFACE)
+target_compile_options(pkgconfigcheck INTERFACE ${PKGS_CFLAGS})
+target_link_libraries(pkgconfigcheck INTERFACE ${PKGS_LDFLAGS})
 bcm_test_link_libraries(pkgconfigcheck)
 
 bcm_install_targets(TARGETS pkgconfigcheck)
 bcm_auto_export(TARGETS pkgconfigcheck)
+
+if(DEFINED PKG_CONFIG_HEADER)
+    bcm_test_header(NAME testheader HEADER ${PKG_CONFIG_HEADER})
+    bcm_test_header(NAME teststaticheader HEADER ${PKG_CONFIG_HEADER} STATIC)
+endif()
 

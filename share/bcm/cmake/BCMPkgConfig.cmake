@@ -72,28 +72,57 @@ function(bcm_preprocess_pkgconfig_property VAR TARGET PROP)
 
 endfunction()
 
-function(bcm_auto_pkgconfig TARGET)
+function(bcm_auto_pkgconfig)
     set(options)
-    set(oneValueArgs NAME)
-    set(multiValueArgs REQUIRES)
+    set(oneValueArgs NAME TARGET)
+    set(multiValueArgs)
 
     cmake_parse_arguments(PARSE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     set(LIBS)
     set(CFLAGS)
+    set(REQUIRES)
     set(DESCRIPTION "No description")
+
+    string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
+    set(PACKAGE_NAME ${PROJECT_NAME})
+
+    set(TARGET)
+    if(PARSE_TARGET)
+        set(TARGET ${PARSE_TARGET})
+    else()
+        get_property(TARGET GLOBAL PROPERTY BCM_PACKAGE_TARGET)
+        set(PACKAGE_NAME ${TARGET})
+    endif()
+
+    if(PARSE_NAME)
+        set(PACKAGE_NAME ${PARSE_NAME})
+    endif()
+
+    string(TOUPPER ${PACKAGE_NAME} PACKAGE_NAME_UPPER)
+    string(TOLOWER ${PACKAGE_NAME} PACKAGE_NAME_LOWER)
 
     get_property(TARGET_NAME TARGET ${TARGET} PROPERTY NAME)
     get_property(TARGET_TYPE TARGET ${TARGET} PROPERTY TYPE)
     get_property(TARGET_DESCRIPTION TARGET ${TARGET} PROPERTY INTERFACE_DESCRIPTION)
     get_property(TARGET_URL TARGET ${TARGET} PROPERTY INTERFACE_URL)
+    get_property(TARGET_REQUIRES TARGET ${TARGET} PROPERTY INTERFACE_PKG_CONFIG_REQUIRES)
     if(NOT TARGET_TYPE STREQUAL "INTERFACE_LIBRARY")
         set(LIBS "${LIBS} -l${TARGET_NAME}")
     endif()
+
+    if(TARGET_REQUIRES)
+        list(APPEND REQUIRES ${TARGET_REQUIRES})
+    endif()
     
     bcm_preprocess_pkgconfig_property(LINK_LIBS ${TARGET} INTERFACE_LINK_LIBRARIES)
-    foreach(LIB LINK_LIBS)
-        if(NOT TARGET ${LIB})
+    foreach(LIB ${LINK_LIBS})
+        if(TARGET ${LIB})
+            get_property(LIB_PKGCONFIG_NAME TARGET ${LIB} PROPERTY INTERFACE_PKG_CONFIG_NAME)
+            if(LIB_PKGCONFIG_NAME)
+                list(APPEND REQUIRES ${LIB_PKGCONFIG_NAME})
+            endif()
+        else()
             set(LIBS "${LIBS} ${LIB}")
         endif()
     endforeach()
@@ -131,26 +160,23 @@ function(bcm_auto_pkgconfig TARGET)
         set(CONTENT "${CONTENT}\nLibs: -L\${libdir} ${LIBS}")
     endif()
 
-    if(PARSE_REQUIRES)
-        set(CONTENT "${CONTENT}\nRequires: ${PARSE_REQUIRES}")
+    if(REQUIRES)
+        string(REPLACE ";" "," REQUIRES_CONTENT ${REQUIRES})
+        set(CONTENT "${CONTENT}\nRequires: ${REQUIRES_CONTENT}")
     endif()
 
-    set(PKG_NAME ${PROJECT_NAME})
-    if(PARSE_NAME)
-        set(PKG_NAME ${PARSE_NAME})
-    endif()
-
-    file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${PKG_NAME}.pc CONTENT
+    file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME_LOWER}.pc CONTENT
 "
 prefix=${CMAKE_INSTALL_PREFIX}
 exec_prefix=\${prefix}
 libdir=\${exec_prefix}/${CMAKE_INSTALL_LIBDIR}
 includedir=\${exec_prefix}/${CMAKE_INSTALL_INCLUDEDIR}
-Name: ${PKG_NAME}
+Name: ${PACKAGE_NAME_LOWER}
 Description: ${DESCRIPTION}
 Version: ${PROJECT_VERSION}
 ${CONTENT}
 "
   )
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PKG_NAME}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME_LOWER}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+    set_property(TARGET ${TARGET} PROPERTY INTERFACE_PKG_CONFIG_NAME ${PACKAGE_NAME_LOWER})
 endfunction()

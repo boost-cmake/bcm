@@ -214,16 +214,36 @@ function(bcm_auto_export)
     endif()
 
     if(PARSE_TARGETS)
+        # Compute targets imported name
         set(EXPORT_LIB_TARGETS)
         foreach(TARGET ${PARSE_TARGETS})
-            list(APPEND EXPORT_LIB_TARGETS ${PARSE_NAMESPACE}${TARGET})
+            get_target_property(TARGET_NAME ${TARGET} EXPORT_NAME)
+            if(NOT TARGET_NAME)
+                get_target_property(TARGET_NAME ${TARGET} NAME)
+            endif()
+            set(EXPORT_LIB_TARGET_${TARGET} ${PARSE_NAMESPACE}${TARGET_NAME})
+            list(APPEND EXPORT_LIB_TARGETS ${EXPORT_LIB_TARGET_${TARGET}})
+        endforeach()
+        # Export custom properties
+        set(EXPORT_PROPERTIES)
+        foreach(TARGET ${PARSE_TARGETS})
+            foreach(PROPERTY INTERFACE_PKG_CONFIG_NAME)
+                set(PROP "$<TARGET_PROPERTY:${TARGET},${PROPERTY}>")
+                set(EXPORT_PROPERTIES "${EXPORT_PROPERTIES}
+$<$<BOOL:${PROP}>:set_target_properties(${EXPORT_LIB_TARGET_${TARGET}} PROPERTIES ${PROPERTY} ${PROP})>
+")
+            endforeach()
         endforeach()
         bcm_write_package_template_function(${CONFIG_TEMPLATE} include "\${CMAKE_CURRENT_LIST_DIR}/${TARGET_FILE}.cmake")
+        bcm_write_package_template_function(${CONFIG_TEMPLATE} include "\${CMAKE_CURRENT_LIST_DIR}/properties-${TARGET_FILE}.cmake")
         foreach(NAME ${PACKAGE_NAME} ${PACKAGE_NAME_UPPER} ${PACKAGE_NAME_LOWER})
             bcm_write_package_template_function(${CONFIG_TEMPLATE} set ${NAME}_LIBRARIES ${EXPORT_LIB_TARGETS})
             bcm_write_package_template_function(${CONFIG_TEMPLATE} set ${NAME}_LIBRARY ${EXPORT_LIB_TARGETS})
         endforeach()
     endif()
+
+    file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/properties-${TARGET_FILE}.cmake CONTENT "${EXPORT_PROPERTIES}")
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/properties-${TARGET_FILE}.cmake DESTINATION ${CONFIG_PACKAGE_INSTALL_DIR})
 
     configure_package_config_file(
         ${CONFIG_TEMPLATE}

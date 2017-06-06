@@ -1,2 +1,2 @@
-install_dir(${TEST_DIR}/libsimple)
-install_dir(${TEST_DIR}/libbasic)
+install_dir(${TEST_DIR}/libsimple TARGETS check)
+install_dir(${TEST_DIR}/libbasic TARGETS check)

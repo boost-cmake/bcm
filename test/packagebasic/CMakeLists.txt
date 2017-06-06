@@ -13,7 +13,8 @@ bcm_package(basic
         main.cpp
 )
 target_link_libraries(basic simple)
-bcm_auto_pkgconfig(basic REQUIRES simple)
+# set_property(TARGET basic APPEND PROPERTY INTERFACE_PKG_CONFIG_REQUIRES simple)
+bcm_auto_pkgconfig()
 
 bcm_test(NAME basictest SOURCES test.cpp)
 bcm_test_header(NAME basictestheader HEADER basic.h)
