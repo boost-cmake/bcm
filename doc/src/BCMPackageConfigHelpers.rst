@@ -48,6 +48,10 @@ This specifies an export file. By default, the export file will be named ``${PRO
 
 This will search for these dependent packages in the cmake package config that is generated.
 
+.. option:: INCLUDE <cmake-files>...
+
+The is a list of additional cmake files that will be included in the cmake package config. This will be included after the dependencies have been included, but before the exported targets are included.
+
 .. option:: NAMESPACE <namespace>
 
 This is the namespace to add to the targets that are exported.
@@ -63,4 +67,5 @@ This is the name to use for the package config file. By default, this uses the p
 .. option:: TARGETS <target>...
 
 The generated config will set ``<package>_LIBRARIES`` to the list of targets listed.
+
 
