@@ -251,7 +251,7 @@ $<$<BOOL:${PROP}>:set_target_properties(${EXPORT_LIB_TARGET_${TARGET}} PROPERTIE
     file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/properties-${TARGET_FILE}.cmake CONTENT "${EXPORT_PROPERTIES}")
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/properties-${TARGET_FILE}.cmake DESTINATION ${CONFIG_PACKAGE_INSTALL_DIR})
 
-    configure_package_config_file(
+    bcm_configure_package_config_file(
         ${CONFIG_TEMPLATE}
         ${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_NAME}.cmake
         INSTALL_DESTINATION ${CONFIG_PACKAGE_INSTALL_DIR}

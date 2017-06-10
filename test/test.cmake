@@ -22,9 +22,11 @@ macro(test_expect_file FILE)
 endmacro()
 
 function(test_exec)
+    string(REPLACE ";" " " OUTPUT "${ARGN}")
+    message(${OUTPUT})
     execute_process(${ARGN} RESULT_VARIABLE RESULT)
     if(NOT RESULT EQUAL 0)
-        message(FATAL_ERROR "Process failed: ${ARGN}")
+        message(FATAL_ERROR "Process failed: ${OUTPUT}")
     endif()
 endfunction()
 
@@ -54,6 +56,41 @@ function(install_dir DIR)
     test_exec(COMMAND ${CMAKE_COMMAND} --build ${BUILD_DIR} --target install)
 
     file(REMOVE_RECURSE ${BUILD_DIR})
+endfunction()
+
+function(test_check_pkgconfig)
+    set(options)
+    set(oneValueArgs NAME HEADER)
+    set(multiValueArgs)
+
+    cmake_parse_arguments(PARSE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    set(HEADER_FLAG)
+    if(PARSE_HEADER)
+        set(HEADER_FLAG -DPKG_CONFIG_HEADER=${PARSE_HEADER})
+    endif()
+
+    install_dir(${TEST_DIR}/pkgconfigcheck TARGETS check CMAKE_ARGS -DPKG_CONFIG_MODULES=${PARSE_NAME} ${HEADER_FLAG})
+endfunction()
+
+function(test_check_package)
+    set(options)
+    set(oneValueArgs NAME HEADER TARGET)
+    set(multiValueArgs)
+
+    cmake_parse_arguments(PARSE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    set(HEADER_FLAG)
+    if(PARSE_HEADER)
+        set(HEADER_FLAG -DPKG_HEADER=${PARSE_HEADER})
+    endif()
+
+    set(TARGET ${PARSE_NAME})
+    if(PARSE_TARGET)
+        set(TARGET ${PARSE_TARGET})
+    endif()
+
+    install_dir(${TEST_DIR}/findpackagecheck CMAKE_ARGS -DPKG=${PARSE_NAME} -DPKG_TARGET=${TARGET} ${HEADER_FLAG})
 endfunction()
 
 install_dir(${TEST_DIR}/../)

@@ -16,7 +16,7 @@ endif()
 
 macro(bcm_find_package)
     find_package(${ARGN})
-    list(APPEND _bcm_find_package "${ARGN}")
+    list(APPEND _bcm_public_packages "${ARGN}")
 endmacro()
 
 function(bcm_package PACKAGE)
