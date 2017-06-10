@@ -57,7 +57,7 @@ And then the user can build with Boost.Config using cmake's ``find_package``::
 
     find_package(boost_config)
     add_executable(foo foo.cpp)
-    target_link_libraries(foo boost_config)
+    target_link_libraries(foo boost::config)
 
 Or if the user isn't using cmake, then ``pkg-config`` can be used instead::
 
