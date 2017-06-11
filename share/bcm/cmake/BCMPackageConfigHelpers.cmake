@@ -170,8 +170,8 @@ endfunction()
 
 function(bcm_auto_export)
     set(options)
-    set(oneValueArgs NAMESPACE EXPORT NAME COMPATIBILITY)
-    set(multiValueArgs TARGETS DEPENDS INCLUDE)
+    set(oneValueArgs NAMESPACE EXPORT NAME COMPATIBILITY DATA_DIR)
+    set(multiValueArgs TARGETS DEPENDS DEPS_INCLUDE)
 
     cmake_parse_arguments(PARSE "${options}" "${oneValueArgs}" "${multiValueArgs}"  ${ARGN})
 
@@ -194,6 +194,10 @@ function(bcm_auto_export)
     set(LIB_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR})
     set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
     set(CONFIG_PACKAGE_INSTALL_DIR ${LIB_INSTALL_DIR}/cmake/${PACKAGE_NAME_LOWER})
+    if(PARSE_DATA_DIR)
+        set(DATA_INSTALL_DIR ${PARSE_DATA_DIR})
+        set(DATA_INSTALL_DIR_ARG DATA_INSTALL_DIR)
+    endif()
 
     set(CONFIG_TEMPLATE "${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME_LOWER}-config.cmake.in")
 
@@ -204,6 +208,10 @@ function(bcm_auto_export)
     foreach(NAME ${PACKAGE_NAME} ${PACKAGE_NAME_UPPER} ${PACKAGE_NAME_LOWER})
         bcm_write_package_template_function(${CONFIG_TEMPLATE} set_and_check ${NAME}_INCLUDE_DIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
         bcm_write_package_template_function(${CONFIG_TEMPLATE} set_and_check ${NAME}_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
+        bcm_write_package_template_function(${CONFIG_TEMPLATE} set_and_check ${NAME}_LIB_DIR "@PACKAGE_LIB_INSTALL_DIR@")
+        if(PARSE_DATA_DIR)
+            bcm_write_package_template_function(${CONFIG_TEMPLATE} set_and_check ${NAME}_DATA_DIR "@PACKAGE_DATA_INSTALL_DIR@")
+        endif()
     endforeach()
 
     if(PARSE_DEPENDS)
@@ -213,7 +221,7 @@ function(bcm_auto_export)
         endforeach()
     endif()
 
-    foreach(INCLUDE ${PARSE_INCLUDE})
+    foreach(INCLUDE ${PARSE_DEPS_INCLUDE})
         install(FILES ${INCLUDE} DESTINATION ${CONFIG_PACKAGE_INSTALL_DIR})
         get_filename_component(INCLUDE_BASE ${INCLUDE} NAME)
         bcm_write_package_template_function(${CONFIG_TEMPLATE} include "\${CMAKE_CURRENT_LIST_DIR}/${INCLUDE_BASE}")
@@ -255,7 +263,7 @@ $<$<BOOL:${PROP}>:set_target_properties(${EXPORT_LIB_TARGET_${TARGET}} PROPERTIE
         ${CONFIG_TEMPLATE}
         ${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_NAME}.cmake
         INSTALL_DESTINATION ${CONFIG_PACKAGE_INSTALL_DIR}
-        PATH_VARS LIB_INSTALL_DIR INCLUDE_INSTALL_DIR
+        PATH_VARS LIB_INSTALL_DIR INCLUDE_INSTALL_DIR ${DATA_INSTALL_DIR_ARG}
     )
     set(COMPATIBILITY_ARG SameMajorVersion)
     if(PARSE_COMPATIBILITY)
