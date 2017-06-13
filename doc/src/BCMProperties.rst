@@ -10,6 +10,9 @@ CXX_EXCEPTIONS
 
 This property can be used to enable or disable C++ exceptions. This can be applied at global, directory or target scope. At global scope this defaults to On.
 
+.. Why these particular C++ options? If we go down this route, won't someone
+   always be dissappointed because their particular option won't be here?
+
 --------
 CXX_RTTI
 --------
