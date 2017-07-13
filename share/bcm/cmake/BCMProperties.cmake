@@ -75,7 +75,27 @@ define_property(TARGET PROPERTY "INTERFACE_PKG_CONFIG_REQUIRES"
   FULL_DOCS "A list of packages required by this package. The versions of these packages may be specified using the comparison operators =, <, >, <= or >=."
 )
 
-define_property(TARGET PROPERTY "INTERFACE_PKG_CONFIG_NAME"
-  BRIEF_DOCS "Pkgconfig name to use this target"
-  FULL_DOCS "Pkgconfig name to use this target"
+define_property(TARGET PROPERTY "INTERFACE_FIND_PACKAGE_NAME"
+  BRIEF_DOCS "The package name that was searched for to create this target"
+  FULL_DOCS "The package name that was searched for to create this target"
+)
+
+define_property(TARGET PROPERTY "INTERFACE_FIND_PACKAGE_REQUIRED"
+  BRIEF_DOCS "true if REQUIRED option was given"
+  FULL_DOCS "true if REQUIRED option was given"
+)
+
+define_property(TARGET PROPERTY "INTERFACE_FIND_PACKAGE_QUIETLY"
+  BRIEF_DOCS "true if QUIET option was given"
+  FULL_DOCS "true if QUIET option was given"
+)
+
+define_property(TARGET PROPERTY "INTERFACE_FIND_PACKAGE_EXACT"
+  BRIEF_DOCS "true if EXACT option was given"
+  FULL_DOCS "true if EXACT option was given"
+)
+
+define_property(TARGET PROPERTY "INTERFACE_FIND_PACKAGE_VERSION"
+  BRIEF_DOCS "full requested version string"
+  FULL_DOCS "full requested version string"
 )

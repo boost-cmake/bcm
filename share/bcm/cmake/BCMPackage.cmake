@@ -1,23 +1,9 @@
 
 include(BCMInstallTargets)
-include(BCMPackageConfigHelpers)
+include(BCMDeploy)
 include(BCMSetupVersion)
 include(BCMTest)
 include(BCMProperties)
-
-function(bcm_mark_as_package TARGET)
-    set_property(GLOBAL PROPERTY BCM_PACKAGE_TARGET ${TARGET})
-endfunction()
-
-# TODO: Make this a global property
-if(NOT DEFINED _bcm_public_packages)
-    set(_bcm_public_packages)
-endif()
-
-macro(bcm_find_package)
-    find_package(${ARGN})
-    list(APPEND _bcm_public_packages "${ARGN}")
-endmacro()
 
 function(bcm_package PACKAGE)
     set(options)
@@ -46,12 +32,6 @@ function(bcm_package PACKAGE)
         add_library(${PACKAGE} INTERFACE)
     endif()
 
-    set(DEPENDS_PACKAGES)
-
-    foreach(PACKAGE ${_bcm_public_packages})
-        list(APPEND DEPENDS_PACKAGES PACKAGE ${PACKAGE})
-    endforeach()
-
     bcm_install_targets(
         TARGETS ${PACKAGE}
         INCLUDE ${PARSE_INCLUDE} 
@@ -60,10 +40,8 @@ function(bcm_package PACKAGE)
         NAME ${PACKAGE} 
         TARGETS ${PACKAGE}
         NAMESPACE ${PARSE_NAMESPACE}
-        DEPENDS ${DEPENDS_PACKAGES}
     )
     bcm_test_link_libraries(${PACKAGE})
-    bcm_mark_as_package(${PACKAGE})
 
 endfunction()
 
@@ -110,9 +88,7 @@ function(bcm_boost_package PACKAGE)
         NAME boost_${PACKAGE} 
         NAMESPACE boost::
         TARGETS boost_${PACKAGE} 
-        DEPENDS ${DEPENDS_PACKAGES}
     )
     bcm_test_link_libraries(boost_${PACKAGE})
-    bcm_mark_as_package(boost_${PACKAGE})
 
 endfunction()

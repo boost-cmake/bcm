@@ -1,2 +1,2 @@
 install_dir(${TEST_DIR}/libsimplenamespace TARGETS check)
-install_dir(${TEST_DIR}/libbasic TARGETS check)
+test_check_package(NAME simple HEADER simple.h TARGET lib::simple)

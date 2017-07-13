@@ -1,10 +1,10 @@
-cmake_minimum_required (VERSION 2.8.12)
+cmake_minimum_required (VERSION 3.5)
 project(basicapp)
 
 find_package(BCM)
 
 include(BCMInstallTargets)
-include(BCMPackageConfigHelpers)
+include(BCMDeploy)
 include(BCMTest)
 include(BCMSetupVersion)
 

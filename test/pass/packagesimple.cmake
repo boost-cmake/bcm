@@ -1,6 +1,0 @@
-install_dir(${TEST_DIR}/libsimple TARGETS check)
-install_dir(${TEST_DIR}/packagebasic TARGETS check)
-test_check_package(NAME simple HEADER simple.h)
-test_check_package(NAME basic HEADER basic.h)
-test_check_pkgconfig(NAME simple HEADER simple.h)
-test_check_pkgconfig(NAME basic HEADER basic.h)
