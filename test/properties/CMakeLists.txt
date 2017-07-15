@@ -4,18 +4,24 @@ project(properties)
 find_package(BCM)
 
 include(BCMProperties)
-include(BCMPackage)
+include(BCMSetupVersion)
+include(BCMDeploy)
 include(BCMTest)
 
-bcm_package(simple
-    VERSION 1.0
-    INCLUDE include
-)
+bcm_setup_version(VERSION 1.0)
+
+add_library(simple INTERFACE)
+
+bcm_install_targets(TARGETS simple INCLUDE include)
+bcm_auto_export(TARGETS simple)
+bcm_auto_pkgconfig(TARGET simple)
 
 if(MSVC)
     add_compile_options(/we4541)
     add_compile_options(/we4530)
 endif()
+
+bcm_test_link_libraries(simple)
 
 bcm_test(NAME simpletest SOURCES test.cpp)
 

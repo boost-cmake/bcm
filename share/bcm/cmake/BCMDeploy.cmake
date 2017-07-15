@@ -2,6 +2,8 @@ include(CMakeParseArguments)
 include(GNUInstallDirs)
 include(WriteBasicConfigVersionFile)
 
+include(BCMPkgConfig)
+
 function(bcm_install_targets)
     set(options)
     set(oneValueArgs EXPORT)
