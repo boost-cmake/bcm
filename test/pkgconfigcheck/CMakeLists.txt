@@ -4,7 +4,7 @@ project(pkgconfigcheck)
 find_package(BCM)
 
 include(BCMInstallTargets)
-include(BCMPackageConfigHelpers)
+include(BCMDeploy)
 include(BCMSetupVersion)
 include(BCMTest)
 include(BCMPkgConfig)

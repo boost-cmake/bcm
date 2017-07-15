@@ -1,7 +1,21 @@
 
 include(CMakeParseArguments)
 include(GNUInstallDirs)
-include(BCMProperties)
+
+define_property(TARGET PROPERTY "INTERFACE_DESCRIPTION"
+  BRIEF_DOCS "Description of the target"
+  FULL_DOCS "Description of the target"
+)
+
+define_property(TARGET PROPERTY "INTERFACE_URL"
+  BRIEF_DOCS "An URL where people can get more information about and download the package."
+  FULL_DOCS "An URL where people can get more information about and download the package."
+)
+
+define_property(TARGET PROPERTY "INTERFACE_PKG_CONFIG_REQUIRES"
+  BRIEF_DOCS "A list of packages required by this package. The versions of these packages may be specified using the comparison operators =, <, >, <= or >=."
+  FULL_DOCS "A list of packages required by this package. The versions of these packages may be specified using the comparison operators =, <, >, <= or >=."
+)
 
 function(bcm_generate_pkgconfig_file)
     set(options)
@@ -91,8 +105,7 @@ function(bcm_auto_pkgconfig)
     if(PARSE_TARGET)
         set(TARGET ${PARSE_TARGET})
     else()
-        get_property(TARGET GLOBAL PROPERTY BCM_PACKAGE_TARGET)
-        set(PACKAGE_NAME ${TARGET})
+        message(SEND_ERROR "Target is required for auto pkg config")
     endif()
 
     if(PARSE_NAME)

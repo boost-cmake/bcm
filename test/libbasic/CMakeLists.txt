@@ -14,8 +14,7 @@ find_package(simple)
 add_library(basic main.cpp)
 target_link_libraries(basic simple)
 
-bcm_install_targets(TARGETS basic)
-bcm_auto_export(TARGETS basic)
+bcm_deploy(TARGETS basic)
 
 bcm_test(NAME basictest SOURCES test.cpp)
 target_link_libraries(basictest basic)

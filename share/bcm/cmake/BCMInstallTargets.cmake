@@ -1,7 +1,6 @@
 include(CMakeParseArguments)
 include(GNUInstallDirs)
 
-
 function(bcm_install_targets)
     set(options)
     set(oneValueArgs EXPORT)
@@ -20,9 +19,6 @@ function(bcm_install_targets)
     set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
     
     foreach(TARGET ${PARSE_TARGETS})
-        if(NOT TARGET ${TARGET})
-            message(SEND_ERROR "${TARGET} is not a target")
-        endif()
         foreach(INCLUDE ${PARSE_INCLUDE})
             get_filename_component(INCLUDE_PATH ${INCLUDE} ABSOLUTE)
             target_include_directories(${TARGET} INTERFACE $<BUILD_INTERFACE:${INCLUDE_PATH}>)

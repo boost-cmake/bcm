@@ -15,9 +15,7 @@ add_library(simple INTERFACE)
 target_compile_definitions(simple INTERFACE -DHAS_SIMPLE=1)
 bcm_test_link_libraries(simple)
 
-bcm_install_targets(TARGETS simple INCLUDE include)
-bcm_auto_export(TARGETS simple)
-bcm_auto_pkgconfig(TARGET simple)
+bcm_deploy(TARGETS simple INCLUDE include)
 
 bcm_test(NAME simpletest SOURCES test.cpp)
 
