@@ -4,9 +4,9 @@ Modules
 .. toctree::
     :maxdepth: 3
 
+    BCMDeploy
+    BCMExport
     BCMInstallTargets
-    BCMPackage
-    BCMPackageConfigHelpers
     BCMPkgConfig
     BCMProperties
     BCMSetupVersion
