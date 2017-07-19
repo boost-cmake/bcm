@@ -19,7 +19,7 @@ The modules can be installed using standard cmake install::
 Once installed, the modules can be used by using ``find_package`` and then including the appropriate module::
 
     find_package(BCM)
-    include(BCMPackage)
+    include(BCMDeploy)
 
 ========
 Overview
@@ -31,20 +31,23 @@ Building a boost library
 
 The BCM modules provide some high-level cmake functions to take care of all the cmake boilerplate needed to build, install and configuration setup. To setup a simple boost library we can do::
 
-    cmake_minimum_required (VERSION 3.0)
-    project(Boost.Config)
+    cmake_minimum_required (VERSION 3.5)
+    project(boost_config)
     
     find_package(BCM)
-    include(BCMPackage)
-    include(BCMPkgConfig)
+    include(BCMDeploy)
+    include(BCMSetupVersion)
+
+    bcm_setup_version(VERSION 1.64.0)
+
+    add_library(boost_config INTERFACE)
+    add_library(boost::config ALIAS boost_config)
+    set_property(TARGET boost_config PROPERTY EXPORT_NAME config)
+
+    bcm_deploy(TARGETS config INCLUDE include)
     
-    bcm_boost_package(config
-        VERSION 1.61.0
-    )
 
-    bcm_auto_pkgconfig()
-
-This sets up the Boost.Config cmake with the version ``1.61.0``. More importantly the user can now install the library, like this::
+This sets up the Boost.Config cmake with the version ``1.64.0``. More importantly the user can now install the library, like this::
 
     mkdir build
     cd build
@@ -63,21 +66,6 @@ Or if the user isn't using cmake, then ``pkg-config`` can be used instead::
 
     g++ `pkg-config boost_config --cflags --libs` foo.cpp
 
-------------
-Dependencies
-------------
-
-For dependencies on other boost libraries, they can be listed with the ``DEPENDS`` argument::
-
-    bcm_boost_package(core
-        VERSION 1.61.0
-        DEPENDS
-            assert
-            config
-    )
-
-This will call ``find_package`` for the dependency and link it in the library. This structured this way to be able to support superbuilds(ie building all libraries together) in the future.
-
 -----
 Tests
 -----
@@ -86,6 +74,16 @@ The BCM modules provide functions for creating tests that integrate into cmake's
 
     bcm_test(NAME config_test_c SOURCES config_test_c.c)
 
-This will compile the ``SOURCES`` and run them. Also, there is no need to link in the ``boost_config``, as ``bcm_test`` will automatically link it in for us. Also, tests can be specified as compile-only or as expected to fail::
+This will compile the ``SOURCES`` and run them. The test also needs to link in ``boost_config``. This can be done with ``target_link_libraries``::
+
+    target_link_libraries(config_test_c boost::config)
+
+Or all tests in the directory can be set using ``bcm_test_link_libraries``::
+
+    bcm_test_link_libraries(boost::config)
+
+And all tests in the directory will use ``boost::config``.
+
+Also, tests can be specified as compile-only or as expected to fail::
 
     bcm_test(NAME test_thread_fail1 SOURCES threads/test_thread_fail1.cpp COMPILE_ONLY WILL_FAIL)
