@@ -9,5 +9,6 @@ BCM
     :maxdepth: 3
 
     src/Intro
+    src/Building
     src/Modules
 
