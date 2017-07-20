@@ -86,7 +86,7 @@ Now, some of these libraries are header-only, but when we call ``target_link_lib
         INCLUDES DESTINATION include
     )
 
-So this will install the include directories and install the library. The ``EXPORT`` command will have cmake generate an export file that will create the target's usage requirements in cmake. This will enable the target to be used by downstream libraries, just like we used ```boost::system``. However, this will only tells cmake which targets are in the export file. To generate it we use ``install(EXPORT)``:
+So this will install the include directories and install the library. The ``EXPORT`` command will have cmake generate an export file that will create the target's usage requirements in cmake. This will enable the target to be used by downstream libraries, just like we used ```boost::system``. However, this will only tells cmake which targets are in the export file. To generate it we use ``install(EXPORT)``::
 
     install(EXPORT boost_filesystem-targets
         FILE boost_filesystem-targets.cmake
@@ -98,7 +98,7 @@ This sets a namespace ``boost::`` on the target, but our target is named ``boost
 
     set_property(TARGET boost_filesystem PROPERTY EXPORT_NAME filesystem)
 
-We can also define a target alias to ``boost::filesystem``, which helps integrated builds:
+We can also define a target alias to ``boost::filesystem``, which helps integrated builds::
 
     add_library(boost::filesystem ALIAS boost_filesystem)
 
