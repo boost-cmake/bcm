@@ -56,4 +56,4 @@ This is the name of the pkgconfig module. By default, this will use the project 
 
 .. option:: TARGET <TARGET>
 
-This is the target which will be used to set the various pkgconfig fields. This is optional. If a target is not given it will use the target define by either ``bcm_package`` or ``bcm_boost_package``.
+This is the target which will be used to set the various pkgconfig fields.

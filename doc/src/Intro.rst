@@ -21,9 +21,9 @@ Once installed, the modules can be used by using ``find_package`` and then inclu
     find_package(BCM)
     include(BCMDeploy)
 
-========
-Overview
-========
+===========
+Quick Start
+===========
 
 ------------------------
 Building a boost library
