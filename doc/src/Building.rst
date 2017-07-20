@@ -1,11 +1,23 @@
-======
-Guides
-======
+========
+Building
+========
 
+There are two scenarios where the users will consume their dependencies in the build:
 
------------------------------
-Building libraries with cmake
------------------------------
+* Prebuilt binaries using ``find_package``
+* Integrated builds using ``add_subdirectory``
+
+When we build libraries using cmake, we want to be able to support both scenarios. 
+
+The first scenario the user would build and install each dependency. With this scenario, we need to generate usage requirements that can be consumed by the user, and ultimately this is done through cmake's ``find_package`` mechanism.
+
+In the integrated build scenario, the user adds the sources with ``add_subdirectory``, and then all dependencies are built in the user's build. There is no need to generate usage requirements as the cmake targets are directly available in the build.
+
+Let's first look at standalone build. 
+
+------------------------------
+Building standalone with cmake
+------------------------------
 
 Let's look at building a library like Boost.Filesystem using just cmake. When we start a cmake, we start with minimuim requirement and the project name::
 
@@ -218,9 +230,9 @@ Putting it all together we have a cmake file that looks like this::
         DESTINATION lib/cmake/boost_filesystem
     )
 
----------------------------
-Building libraries with BCM
----------------------------
+----------------------------
+Building standalone with BCM
+----------------------------
 
 The boost cmake modules can help reduce the boilerplate needed in writing these libraries. To use these modules we just call ``find_package(BCM)`` first::
 
@@ -280,3 +292,27 @@ Then to install, and generate package configuration we just use ``bcm_deploy``::
     bcm_deploy(TARGETS boost_filesystem NAMESPACE boost::)
 
 In addition to generating package configuration for cmake, this will also generate the package configuration for ``pkgconfig``.
+
+-----------------
+Integrated builds
+-----------------
+
+As we were setting up cmake for standalone builds, we made sure we didn't do anything to prevent an integrated build, and even provided an alias target to help ease the process. Finally, to integrate the sources into the build is just a matter of calling ``add_subdirectory`` on each project::
+
+    file(GLOB LIBS libs/*)
+    foreach(lib ${LIBS})
+        add_subdirectory(${lib})
+    endforeach()
+
+We could also use ``add_subdirectory(${lib} EXCLUDE_FROM_ALL)`` so it builds targets that are not necessary. Of course, every project is still calling ``find_package`` to find prebuilt binaries. Since we don't need to search for those libraries because they are integrated into the build we can override ``find_package`` to ignore those dependencies::
+
+    file(GLOB LIBS libs/*)
+    macro(find_package NAME)
+        if(NOT "${NAME}" IN_LIST LIBS)
+            _find_package(${ARGV})
+        endif()
+    endmacro()
+
+    foreach(lib ${LIBS})
+        add_subdirectory(${lib})
+    endforeach()
