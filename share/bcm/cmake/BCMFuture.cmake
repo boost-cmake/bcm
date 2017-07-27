@@ -24,11 +24,9 @@ define_property(TARGET PROPERTY "INTERFACE_FIND_PACKAGE_VERSION"
 )
 
 macro(add_library LIB)
-    message("add_library(${LIB} ${ARGN})")
     _add_library(${LIB} ${ARGN})
     set(ARG_LIST "${ARGN}")
     if("IMPORTED" IN_LIST ARG_LIST)
-        message("IMPORTED: add_library(${LIB} ${ARGN})")
         if(CMAKE_FIND_PACKAGE_NAME)
             set_target_properties(${LIB} PROPERTIES INTERFACE_FIND_PACKAGE_NAME ${CMAKE_FIND_PACKAGE_NAME})
             foreach(TYPE REQUIRED QUIETLY EXACT VERSION)
