@@ -14,7 +14,7 @@ function(bcm_deploy)
     bcm_auto_pkgconfig(TARGET ${PARSE_TARGETS})
     bcm_auto_export(TARGETS ${PARSE_TARGETS} NAMESPACE ${PARSE_NAMESPACE} COMPATIBILITY ${PARSE_COMPATIBILITY})
 
-    foreach(TARGET ${TARGETS})
+    foreach(TARGET ${PARSE_TARGETS})
         get_target_property(TARGET_NAME ${TARGET} EXPORT_NAME)
         if(NOT TARGET_NAME)
             get_target_property(TARGET_NAME ${TARGET} NAME)
