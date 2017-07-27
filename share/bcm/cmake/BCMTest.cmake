@@ -12,12 +12,15 @@ if(NOT TARGET tests)
     add_dependencies(check tests)
 endif()
 
-if(NOT TARGET _bcm_test_dependencies)
-    add_library(_bcm_test_dependencies INTERFACE)
-endif()
+foreach(scope DIRECTORY TARGET)
+    define_property(${scope} PROPERTY "BCM_TEST_DEPENDENCIES" INHERITED
+        BRIEF_DOCS "Default test dependencies"
+        FULL_DOCS "Default test dependencies"
+    )
+endforeach()
 
 function(bcm_test_link_libraries)
-    target_link_libraries(_bcm_test_dependencies INTERFACE ${ARGN})
+    set_property(DIRECTORY APPEND PROPERTY BCM_TEST_DEPENDENCIES ${ARGN})
 endfunction()
 
 function(bcm_mark_as_test)
@@ -70,7 +73,9 @@ function(bcm_test)
         endif()
     endif()
     if(NOT PARSE_NO_TEST_LIBS)
-        target_link_libraries(${PARSE_NAME} _bcm_test_dependencies)
+        target_link_libraries(${PARSE_NAME}
+            $<TARGET_PROPERTY:BCM_TEST_DEPENDENCIES>
+        )
     endif()
 endfunction(bcm_test)
 
@@ -98,6 +103,8 @@ function(bcm_test_header)
         )
     endif()
     if(NOT PARSE_NO_TEST_LIBS)
-        target_link_libraries(${PARSE_NAME} _bcm_test_dependencies)
+        target_link_libraries(${PARSE_NAME}
+            $<TARGET_PROPERTY:BCM_TEST_DEPENDENCIES>
+        )
     endif()
 endfunction(bcm_test_header)
