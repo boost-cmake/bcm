@@ -4,7 +4,7 @@ include(CMakeParseArguments)
 enable_testing()
 
 if(NOT TARGET check)
-    add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure -C ${CMAKE_CFG_INTDIR})
+    add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure -C ${CMAKE_CFG_INTDIR} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 endif()
 
 if(NOT TARGET tests)
@@ -50,16 +50,10 @@ function(bcm_test)
     endif()
 
     if(PARSE_COMPILE_ONLY)
-        if(PARSE_WILL_FAIL)
-            add_library(${PARSE_NAME} STATIC EXCLUDE_FROM_ALL ${SOURCES})
-            add_test(NAME ${PARSE_NAME}
-                COMMAND ${CMAKE_COMMAND} --build . --target ${PARSE_NAME} --config $<CONFIGURATION>
-                WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-            set_tests_properties(${PARSE_NAME} PROPERTIES WILL_FAIL TRUE)
-        else()
-            add_library(${PARSE_NAME} STATIC ${SOURCES})
-            bcm_mark_as_test(${PARSE_NAME})
-        endif()
+        add_library(${PARSE_NAME} STATIC EXCLUDE_FROM_ALL ${SOURCES})
+        add_test(NAME ${PARSE_NAME}
+            COMMAND ${CMAKE_COMMAND} --build . --target ${PARSE_NAME} --config $<CONFIGURATION>
+            WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
     else()
         add_executable(${PARSE_NAME} ${SOURCES})
         bcm_mark_as_test(${PARSE_NAME})
@@ -68,10 +62,11 @@ function(bcm_test)
         else()
             add_test(NAME ${PARSE_NAME} COMMAND ${PARSE_NAME})
         endif()
-        if(PARSE_WILL_FAIL)
-            set_tests_properties(${PARSE_NAME} PROPERTIES WILL_FAIL TRUE)
-        endif()
     endif()
+    if(PARSE_WILL_FAIL)
+        set_tests_properties(${PARSE_NAME} PROPERTIES WILL_FAIL TRUE)
+    endif()
+    set_tests_properties(${PARSE_NAME} PROPERTIES LABELS ${PROJECT_NAME})
     if(NOT PARSE_NO_TEST_LIBS)
         target_link_libraries(${PARSE_NAME}
             $<TARGET_PROPERTY:BCM_TEST_DEPENDENCIES>
