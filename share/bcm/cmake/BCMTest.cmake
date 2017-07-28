@@ -7,9 +7,19 @@ if(NOT TARGET check)
     add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure -C ${CMAKE_CFG_INTDIR} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 endif()
 
+
 if(NOT TARGET tests)
     add_custom_target(tests COMMENT "Build all tests.")
     add_dependencies(check tests)
+endif()
+
+if(NOT TARGET check-${PROJECT_NAME})
+    add_custom_target(check-${PROJECT_NAME} COMMAND ${CMAKE_CTEST_COMMAND} -L ${PROJECT_NAME} --output-on-failure -C ${CMAKE_CFG_INTDIR} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+endif()
+
+if(NOT TARGET tests-${PROJECT_NAME})
+    add_custom_target(tests-${PROJECT_NAME} COMMENT "Build all tests for ${PROJECT_NAME}.")
+    add_dependencies(check-${PROJECT_NAME} tests-${PROJECT_NAME})
 endif()
 
 foreach(scope DIRECTORY TARGET)
@@ -31,6 +41,7 @@ function(bcm_mark_as_test)
             )
         endif()
         add_dependencies(tests ${TEST_TARGET})
+        add_dependencies(tests-${PROJECT_NAME} ${TEST_TARGET})
     endforeach()
 endfunction(bcm_mark_as_test)
 
