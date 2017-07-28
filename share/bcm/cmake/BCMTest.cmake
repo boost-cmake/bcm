@@ -108,6 +108,7 @@ function(bcm_test_header)
             "#include <${PARSE_HEADER}>\nint main() {}\n"
         )
     endif()
+    set_tests_properties(${PARSE_NAME} PROPERTIES LABELS ${PROJECT_NAME})
     if(NOT PARSE_NO_TEST_LIBS)
         target_link_libraries(${PARSE_NAME}
             $<TARGET_PROPERTY:BCM_TEST_DEPENDENCIES>
