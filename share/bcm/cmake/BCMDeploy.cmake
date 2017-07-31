@@ -23,6 +23,7 @@ function(bcm_deploy)
         if(NOT TARGET ${EXPORT_LIB_TARGET})
             add_library(${EXPORT_LIB_TARGET} ALIAS ${TARGET})
         endif()
+        set_target_properties(${TARGET} PROPERTIES INTERFACE_FIND_PACKAGE_NAME ${PROJECT_NAME})
     endforeach()
 
 endfunction()
