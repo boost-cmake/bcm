@@ -132,9 +132,14 @@ function(bcm_auto_pkgconfig)
     foreach(LIB ${LINK_LIBS})
         if(TARGET ${LIB})
             get_property(LIB_PKGCONFIG_NAME TARGET ${LIB} PROPERTY INTERFACE_PKG_CONFIG_NAME)
+            # TODO: Error if this property is missing
             if(LIB_PKGCONFIG_NAME)
                 list(APPEND REQUIRES ${LIB_PKGCONFIG_NAME})
             endif()
+        elseif("${LIB}" MATCHES "::")
+            # It must be an aliased target from another subdirectory, so lets use generator expressions instead
+            set(LIB_TARGET_NAME "$<TARGET_PROPERTY:${LIB},ALIASED_TARGET>")
+            list(APPEND REQUIRES "$<TARGET_PROPERTY:${LIB_TARGET_NAME},INTERFACE_PKG_CONFIG_NAME>")
         else()
             set(LIBS "${LIBS} ${LIB}")
         endif()
@@ -174,7 +179,7 @@ function(bcm_auto_pkgconfig)
     endif()
 
     if(REQUIRES)
-        string(REPLACE ";" "," REQUIRES_CONTENT ${REQUIRES})
+        string(REPLACE ";" "," REQUIRES_CONTENT "${REQUIRES}")
         set(CONTENT "${CONTENT}\nRequires: ${REQUIRES_CONTENT}")
     endif()
 
