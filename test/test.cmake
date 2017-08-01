@@ -42,7 +42,7 @@ function(install_dir DIR)
     if(NOT EXISTS ${BUILD_DIR})
         file(MAKE_DIRECTORY ${BUILD_DIR})
     endif()
-    test_exec(COMMAND ${CMAKE_COMMAND} 
+    test_exec(COMMAND ${CMAKE_COMMAND}
         -DCMAKE_PREFIX_PATH=${PREFIX} 
         -DCMAKE_INSTALL_PREFIX=${PREFIX}
         ${PARSE_CMAKE_ARGS}
