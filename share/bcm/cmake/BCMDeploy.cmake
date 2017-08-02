@@ -24,6 +24,8 @@ function(bcm_deploy)
             add_library(${EXPORT_LIB_TARGET} ALIAS ${TARGET})
         endif()
         set_target_properties(${TARGET} PROPERTIES INTERFACE_FIND_PACKAGE_NAME ${PROJECT_NAME})
+        bcm_shadow_notify(${EXPORT_LIB_TARGET})
+        bcm_shadow_notify(${TARGET})
     endforeach()
 
 endfunction()
