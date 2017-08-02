@@ -30,7 +30,28 @@ foreach(scope DIRECTORY TARGET)
 endforeach()
 
 function(bcm_test_link_libraries)
-    set_property(DIRECTORY APPEND PROPERTY BCM_TEST_DEPENDENCIES ${ARGN})
+    if(BUILD_TESTING)
+        set_property(DIRECTORY APPEND PROPERTY BCM_TEST_DEPENDENCIES ${ARGN})
+    else()
+        foreach(TARGET ${ARGN})
+            if(TARGET ${TARGET})
+                set_property(DIRECTORY APPEND PROPERTY BCM_TEST_DEPENDENCIES ${TARGET})
+            elseif(${TARGET} MATCHES "::")
+                bcm_shadow_exists(HAS_TARGET ${TARGET})
+                set_property(DIRECTORY APPEND PROPERTY BCM_TEST_DEPENDENCIES $<${HAS_TARGET}:${TARGET}>)
+            else()
+                set_property(DIRECTORY APPEND PROPERTY BCM_TEST_DEPENDENCIES ${TARGET})
+            endif()
+        endforeach()
+    endif()
+endfunction()
+
+function(bcm_target_link_test_libs TARGET)
+    # target_link_libraries(${TARGET}
+    #     $<TARGET_PROPERTY:BCM_TEST_DEPENDENCIES>
+    # )
+    get_property(DEPS DIRECTORY PROPERTY BCM_TEST_DEPENDENCIES)
+    target_link_libraries(${TARGET} ${DEPS})
 endfunction()
 
 function(bcm_mark_as_test)
@@ -79,9 +100,7 @@ function(bcm_test)
     endif()
     set_tests_properties(${PARSE_NAME} PROPERTIES LABELS ${PROJECT_NAME})
     if(NOT PARSE_NO_TEST_LIBS)
-        target_link_libraries(${PARSE_NAME}
-            $<TARGET_PROPERTY:BCM_TEST_DEPENDENCIES>
-        )
+        bcm_target_link_test_libs(${PARSE_NAME})
     endif()
 endfunction(bcm_test)
 
@@ -110,8 +129,6 @@ function(bcm_test_header)
     endif()
     set_tests_properties(${PARSE_NAME} PROPERTIES LABELS ${PROJECT_NAME})
     if(NOT PARSE_NO_TEST_LIBS)
-        target_link_libraries(${PARSE_NAME}
-            $<TARGET_PROPERTY:BCM_TEST_DEPENDENCIES>
-        )
+        bcm_target_link_test_libs(${PARSE_NAME})
     endif()
 endfunction(bcm_test_header)
