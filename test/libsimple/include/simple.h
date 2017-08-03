@@ -4,7 +4,7 @@
 
 #include <thread>
 
-#ifndef HAS_SIMPLE
+#if !defined(HAS_SIMPLE) || DEFINE_3 !=3
 #error "Not configured"
 #endif
 

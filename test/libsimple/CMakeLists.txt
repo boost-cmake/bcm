@@ -14,13 +14,14 @@ bcm_setup_version(VERSION 1.0 GENERATE_HEADER simpleversion.hpp)
 find_package(Threads)
 
 add_library(simple INTERFACE)
-target_compile_definitions(simple INTERFACE -DHAS_SIMPLE=1)
+target_include_directories(simple INTERFACE $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include2>)
+target_compile_definitions(simple INTERFACE -DSOME_DEFINE=1 -DHAS_SIMPLE=1 -DDEFINE_3=3)
 target_link_libraries(simple INTERFACE Threads::Threads)
 if(NOT MSVC)
 target_compile_options(simple INTERFACE -std=c++0x)
 endif()
 bcm_test_link_libraries(simple)
-
+install(FILES test.cpp DESTINATION include2)
 bcm_deploy(TARGETS simple INCLUDE include)
 
 bcm_test(NAME simpletest SOURCES test.cpp)
