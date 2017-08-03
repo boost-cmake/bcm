@@ -17,7 +17,7 @@ add_library(simple INTERFACE)
 target_compile_definitions(simple INTERFACE -DHAS_SIMPLE=1)
 target_link_libraries(simple INTERFACE ${CMAKE_THREAD_LIBS_INIT})
 if(NOT MSVC)
-target_compile_options(simple INTERFACE -std=c++11)
+target_compile_options(simple INTERFACE -std=c++0x)
 endif()
 bcm_test_link_libraries(simple)
 
