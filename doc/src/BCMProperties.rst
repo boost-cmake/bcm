@@ -22,6 +22,24 @@ CXX_STATIC_RUNTIME
 
 This property can be used to enable or disable linking against the static C++ runtime. This can be applied at global, directory or target scope. At global scope this defaults to Off.
 
+------------
+CXX_WARNINGS
+------------
+
+The ``CXX_WARNINGS`` property controls the warning level of compilers. It has the following values:
+
+* ``off`` - disables all warnings.
+* ``on`` - enables default warning level for the tool.
+* ``all`` - enables all warnings.
+
+Default value is ``on``.
+
+----------------------
+CXX_WARNINGS_AS_ERRORS
+----------------------
+
+The ``CXX_WARNINGS_AS_ERRORS`` property makes it possible to treat warnings as errors and abort compilation on a warning. The value ``on`` enables this behaviour. The default value is ``off``. 
+
 ---------------------
 INTERFACE_DESCRIPTION
 ---------------------
