@@ -11,7 +11,6 @@ include(BCMPkgConfig)
 
 bcm_setup_version(VERSION 1.0 GENERATE_HEADER simpleversion.hpp)
 
-set(THREADS_PREFER_PTHREAD_FLAG 1)
 find_package(Threads)
 
 add_library(simple INTERFACE)

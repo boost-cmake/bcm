@@ -45,6 +45,7 @@ function(install_dir DIR)
     test_exec(COMMAND ${CMAKE_COMMAND}
         -DCMAKE_PREFIX_PATH=${PREFIX} 
         -DCMAKE_INSTALL_PREFIX=${PREFIX}
+        -DTHREADS_PREFER_PTHREAD_FLAG=1
         ${PARSE_CMAKE_ARGS}
         ${DIR}
         WORKING_DIRECTORY ${BUILD_DIR}
