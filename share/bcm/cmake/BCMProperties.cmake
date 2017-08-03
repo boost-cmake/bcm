@@ -20,12 +20,22 @@ foreach(scope GLOBAL DIRECTORY TARGET)
     BRIEF_DOCS "Enable linking against the static C++ runtime, defaults to OFF at global scope"
     FULL_DOCS "Enable linking against the static C++ runtime, defaults to OFF at global scope"
   )
+  define_property(${scope} PROPERTY "CXX_WARNINGS" INHERITED
+    BRIEF_DOCS "Controls the warning level of compilers, defaults to ON at global scope"
+    FULL_DOCS "Controls the warning level of compilers, defaults to ON at global scope"
+  )
+  define_property(${scope} PROPERTY "CXX_WARNINGS_AS_ERRORS" INHERITED
+    BRIEF_DOCS "Treat warnings as errors and abort compilation on a warning, defaults to OFF at global scope"
+    FULL_DOCS "Treat warnings as errors and abort compilation on a warning, defaults to OFF at global scope"
+  )
 endforeach()
 # Set the default for these properties at global scope. If they are not set per target or
 # whatever, the next highest scope will be looked up
 set_property(GLOBAL PROPERTY CXX_EXCEPTIONS ON)
 set_property(GLOBAL PROPERTY CXX_RTTI ON)
 set_property(GLOBAL PROPERTY CXX_STATIC_RUNTIME OFF)
+set_property(GLOBAL PROPERTY CXX_WARNINGS ON)
+set_property(GLOBAL PROPERTY CXX_WARNINGS_AS_ERRORS OFF)
 if(MSVC)
   # Purge unconditional use of /MDd, /MD and /EHsc.
   foreach(flag
@@ -46,12 +56,21 @@ if(MSVC)
     $<$<STREQUAL:$<UPPER_CASE:$<TARGET_PROPERTY:CXX_RTTI>>,OFF>:/GR->
     $<$<STREQUAL:$<UPPER_CASE:$<TARGET_PROPERTY:CXX_STATIC_RUNTIME>>,OFF>:$<$<CONFIG:Debug>:/MDd>$<$<NOT:$<CONFIG:Debug>>:/MD>>
     $<$<STREQUAL:$<UPPER_CASE:$<TARGET_PROPERTY:CXX_STATIC_RUNTIME>>,ON>:$<$<CONFIG:Debug>:/MTd>$<$<NOT:$<CONFIG:Debug>>:/MT>>
+    $<$<STREQUAL:$<UPPER_CASE:$<TARGET_PROPERTY:CXX_WARNINGS>>,ON>:/W3>
+    $<$<STREQUAL:$<UPPER_CASE:$<TARGET_PROPERTY:CXX_WARNINGS>>,OFF>:/W0>
+    $<$<STREQUAL:$<UPPER_CASE:$<TARGET_PROPERTY:CXX_WARNINGS>>,ALL>:/W4>
+    $<$<STREQUAL:$<UPPER_CASE:$<TARGET_PROPERTY:CXX_WARNINGS_AS_ERRORS>>,ON>:/WX>
   )
 else()
   add_compile_options(
     $<$<STREQUAL:$<UPPER_CASE:$<TARGET_PROPERTY:CXX_EXCEPTIONS>>,OFF>:-fno-exceptions>
     $<$<STREQUAL:$<UPPER_CASE:$<TARGET_PROPERTY:CXX_RTTI>>,OFF>:-fno-rtti>
     $<$<STREQUAL:$<UPPER_CASE:$<TARGET_PROPERTY:CXX_STATIC_RUNTIME>>,ON>:-static>
+    $<$<STREQUAL:$<UPPER_CASE:$<TARGET_PROPERTY:CXX_WARNINGS>>,ON>:-Wall>
+    $<$<STREQUAL:$<UPPER_CASE:$<TARGET_PROPERTY:CXX_WARNINGS>>,OFF>:-w>
+    $<$<STREQUAL:$<UPPER_CASE:$<TARGET_PROPERTY:CXX_WARNINGS>>,ALL>:-Wall>
+    $<$<STREQUAL:$<UPPER_CASE:$<TARGET_PROPERTY:CXX_WARNINGS>>,ALL>:-pedantic>
+    $<$<STREQUAL:$<UPPER_CASE:$<TARGET_PROPERTY:CXX_WARNINGS_AS_ERRORS>>,ON>:-Werror>
   )
 endif()
 

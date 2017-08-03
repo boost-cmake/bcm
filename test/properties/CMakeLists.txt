@@ -45,3 +45,23 @@ set_target_properties(rtti PROPERTIES CXX_RTTI Off)
 
 bcm_test(NAME rttipass SOURCES rtti.cpp)
 set_target_properties(rttipass PROPERTIES CXX_RTTI On)
+
+foreach(WARNING_LEVEL off on all)
+    bcm_test(NAME warnings-${WARNING_LEVEL} SOURCES warnings.cpp)
+    set_target_properties(warnings-${WARNING_LEVEL} PROPERTIES CXX_WARNINGS ${WARNING_LEVEL})
+
+    if(WARNING_LEVEL STREQUAL "off")
+        bcm_test(NAME warnings-errors-${WARNING_LEVEL} SOURCES warnings.cpp COMPILE_ONLY)
+    else()
+        bcm_test(NAME warnings-errors-${WARNING_LEVEL} SOURCES warnings.cpp COMPILE_ONLY WILL_FAIL)
+    endif()
+    set_target_properties(warnings-errors-${WARNING_LEVEL} PROPERTIES CXX_WARNINGS ${WARNING_LEVEL})
+    set_target_properties(warnings-errors-${WARNING_LEVEL} PROPERTIES CXX_WARNINGS_AS_ERRORS On)
+
+    bcm_test(NAME nowarnings-${WARNING_LEVEL} SOURCES nowarnings.cpp)
+    set_target_properties(nowarnings-${WARNING_LEVEL} PROPERTIES CXX_WARNINGS ${WARNING_LEVEL})
+
+    bcm_test(NAME nowarnings-errors-${WARNING_LEVEL} SOURCES nowarnings.cpp)
+    set_target_properties(nowarnings-errors-${WARNING_LEVEL} PROPERTIES CXX_WARNINGS ${WARNING_LEVEL})
+    set_target_properties(nowarnings-errors-${WARNING_LEVEL} PROPERTIES CXX_WARNINGS_AS_ERRORS On)
+endforeach()
