@@ -15,7 +15,7 @@ find_package(Threads)
 
 add_library(simple INTERFACE)
 target_compile_definitions(simple INTERFACE -DHAS_SIMPLE=1)
-target_link_libraries(simple INTERFACE ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(simple INTERFACE Threads::Threads)
 if(NOT MSVC)
 target_compile_options(simple INTERFACE -std=c++0x)
 endif()
