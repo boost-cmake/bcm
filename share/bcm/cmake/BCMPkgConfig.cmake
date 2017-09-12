@@ -86,7 +86,7 @@ function(bcm_preprocess_pkgconfig_property VAR TARGET PROP)
 
 endfunction()
 
-function(bcm_auto_pkgconfig)
+function(bcm_auto_pkgconfig_each)
     set(options)
     set(oneValueArgs NAME TARGET)
     set(multiValueArgs)
@@ -200,4 +200,52 @@ ${CONTENT}
   )
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME_LOWER}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
     set_property(TARGET ${TARGET} PROPERTY INTERFACE_PKG_CONFIG_NAME ${PACKAGE_NAME_LOWER})
+endfunction()
+
+function(bcm_auto_pkgconfig)
+    set(options)
+    set(oneValueArgs NAME)
+    set(multiValueArgs TARGET) # TODO: Rename to TARGETS
+
+    cmake_parse_arguments(PARSE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    list(LENGTH PARSE_TARGET TARGET_COUNT)
+
+    if(TARGET_COUNT EQUAL 1)
+        bcm_auto_pkgconfig_each(TARGET ${PARSE_TARGET} NAME ${PARSE_NAME})
+    else()
+        string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
+        set(PACKAGE_NAME ${PROJECT_NAME})
+
+        if(PARSE_NAME)
+            set(PACKAGE_NAME ${PARSE_NAME})
+        endif()
+
+        string(TOLOWER ${PACKAGE_NAME} PACKAGE_NAME_LOWER)
+
+        set(GENERATE_PROJECT_PC On)
+        foreach(TARGET ${PARSE_TARGET})
+            if("${TARGET}" STREQUAL "${PACKAGE_NAME_LOWER}")
+                set(GENERATE_PROJECT_PC Off)
+            endif()
+            bcm_auto_pkgconfig_each(TARGET ${TARGET} NAME ${TARGET})
+        endforeach()
+
+        string(REPLACE ";" "," REQUIRES "${PARSE_TARGET}")
+        # TODO: Get description from project
+        set(DESCRIPTION "No description")
+
+        if(GENERATE_PROJECT_PC)
+            file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${PACKAGE_NAME_LOWER}.pc CONTENT
+"
+Name: ${PACKAGE_NAME_LOWER}
+Description: ${DESCRIPTION}
+Version: ${PROJECT_VERSION}
+Requires: ${REQUIRES}
+"
+            )
+        endif()
+    endif()
+
+
 endfunction()

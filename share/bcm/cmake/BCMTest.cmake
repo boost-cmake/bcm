@@ -22,6 +22,24 @@ if(NOT TARGET tests-${PROJECT_NAME})
     add_dependencies(check-${PROJECT_NAME} tests-${PROJECT_NAME})
 endif()
 
+function(bcm_mark_as_test)
+    foreach(TEST_TARGET ${ARGN})
+        if (NOT BUILD_TESTING)
+            set_target_properties(${TEST_TARGET}
+                PROPERTIES EXCLUDE_FROM_ALL TRUE
+            )
+        endif()
+        add_dependencies(tests ${TEST_TARGET})
+        add_dependencies(tests-${PROJECT_NAME} ${TEST_TARGET})
+    endforeach()
+endfunction(bcm_mark_as_test)
+
+if(NOT TARGET _bcm_internal_tests-${PROJECT_NAME})
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/_bcm_internal_tests-${PROJECT_NAME}.cpp "")
+    add_library(_bcm_internal_tests-${PROJECT_NAME} STATIC ${CMAKE_CURRENT_BINARY_DIR}/_bcm_internal_tests-${PROJECT_NAME}.cpp)
+    bcm_mark_as_test(_bcm_internal_tests-${PROJECT_NAME})
+endif()
+
 foreach(scope DIRECTORY TARGET)
     define_property(${scope} PROPERTY "BCM_TEST_DEPENDENCIES" INHERITED
         BRIEF_DOCS "Default test dependencies"
@@ -32,15 +50,19 @@ endforeach()
 function(bcm_test_link_libraries)
     if(BUILD_TESTING)
         set_property(DIRECTORY APPEND PROPERTY BCM_TEST_DEPENDENCIES ${ARGN})
+        target_link_libraries(_bcm_internal_tests-${PROJECT_NAME} ${ARGN})
     else()
         foreach(TARGET ${ARGN})
             if(TARGET ${TARGET})
                 set_property(DIRECTORY APPEND PROPERTY BCM_TEST_DEPENDENCIES ${TARGET})
+                target_link_libraries(_bcm_internal_tests-${PROJECT_NAME} ${TARGET})
             elseif(${TARGET} MATCHES "::")
                 bcm_shadow_exists(HAS_TARGET ${TARGET})
                 set_property(DIRECTORY APPEND PROPERTY BCM_TEST_DEPENDENCIES $<${HAS_TARGET}:${TARGET}>)
+                target_link_libraries(_bcm_internal_tests-${PROJECT_NAME} $<${HAS_TARGET}:${TARGET}>)
             else()
                 set_property(DIRECTORY APPEND PROPERTY BCM_TEST_DEPENDENCIES ${TARGET})
+                target_link_libraries(_bcm_internal_tests-${PROJECT_NAME} ${TARGET})
             endif()
         endforeach()
     endif()
@@ -54,24 +76,17 @@ function(bcm_target_link_test_libs TARGET)
     target_link_libraries(${TARGET} ${DEPS})
 endfunction()
 
-function(bcm_mark_as_test)
-    foreach(TEST_TARGET ${ARGN})
-        if (NOT BUILD_TESTING)
-            set_target_properties(${TEST_TARGET}
-                PROPERTIES EXCLUDE_FROM_ALL TRUE
-            )
-        endif()
-        add_dependencies(tests ${TEST_TARGET})
-        add_dependencies(tests-${PROJECT_NAME} ${TEST_TARGET})
-    endforeach()
-endfunction(bcm_mark_as_test)
 
 function(bcm_test)
     set(options COMPILE_ONLY WILL_FAIL NO_TEST_LIBS)
     set(oneValueArgs NAME)
-    set(multiValueArgs SOURCES CONTENT)
+    set(multiValueArgs SOURCES CONTENT ARGS)
 
     cmake_parse_arguments(PARSE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    if(PARSE_UNPARSED_ARGUMENTS)
+        message(FATAL_ERROR "Unknown keywords given to bcm_test(): \"${PARSE_UNPARSED_ARGUMENTS}\"")
+    endif()
 
     # TODO: Check if name exists
 
@@ -86,13 +101,18 @@ function(bcm_test)
         add_test(NAME ${PARSE_NAME}
             COMMAND ${CMAKE_COMMAND} --build . --target ${PARSE_NAME} --config $<CONFIGURATION>
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+
+        # set_tests_properties(${PARSE_NAME} PROPERTIES RESOURCE_LOCK bcm_test_compile_only)
     else()
         add_executable(${PARSE_NAME} ${SOURCES})
         bcm_mark_as_test(${PARSE_NAME})
         if(WIN32)
-            add_test(NAME ${PARSE_NAME} WORKING_DIRECTORY ${LIBRARY_OUTPUT_PATH} COMMAND ${PARSE_NAME}${CMAKE_EXECUTABLE_SUFFIX})
+            
+            # TODO: Don't use LIBRARY_OUTPUT_PATH as cwd, instead add
+            #       LIBRARY_OUTPUT_PATH to library path
+            add_test(NAME ${PARSE_NAME} WORKING_DIRECTORY ${LIBRARY_OUTPUT_PATH} COMMAND ${PARSE_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${PARSE_ARGS})
         else()
-            add_test(NAME ${PARSE_NAME} COMMAND ${PARSE_NAME})
+            add_test(NAME ${PARSE_NAME} COMMAND ${PARSE_NAME} ${PARSE_ARGS} WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
         endif()
     endif()
     if(PARSE_WILL_FAIL)
