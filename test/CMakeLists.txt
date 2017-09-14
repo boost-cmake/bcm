@@ -4,7 +4,7 @@ set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES ${CMAKE_CURRE
 function(create_test NAME TEST)
     set(CONTEXT)
     # get_cmake_property(VARS VARIABLES)
-    foreach (VAR_NAME CMAKE_TOOLCHAIN_FILE)
+    foreach (VAR_NAME CMAKE_TOOLCHAIN_FILE CMAKE_CROSSCOMPILING)
         list(APPEND CONTEXT -D${VAR_NAME}=${${VAR_NAME}})
     endforeach()
     add_custom_target(${NAME} COMMAND ${CMAKE_COMMAND} ${CONTEXT} -P ${CMAKE_CURRENT_SOURCE_DIR}/test.cmake ${TEST} ${CMAKE_CURRENT_BINARY_DIR}/tmp/${NAME})

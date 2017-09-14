@@ -86,7 +86,10 @@ function(test_check_pkgconfig)
         set(HEADER_FLAG -DPKG_CONFIG_HEADER=${PARSE_HEADER})
     endif()
 
-    install_dir(${TEST_DIR}/pkgconfigcheck TARGETS check CMAKE_ARGS -DPKG_CONFIG_MODULES=${PARSE_NAME} ${HEADER_FLAG})
+    # TODO: We really should check pkgconfig during cross compiling
+    if(NOT CMAKE_CROSSCOMPILING)
+        install_dir(${TEST_DIR}/pkgconfigcheck TARGETS check CMAKE_ARGS -DPKG_CONFIG_MODULES=${PARSE_NAME} ${HEADER_FLAG})
+    endif()
 endfunction()
 
 function(test_check_package)
