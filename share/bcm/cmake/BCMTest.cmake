@@ -34,11 +34,14 @@ function(bcm_mark_as_test)
     endforeach()
 endfunction(bcm_mark_as_test)
 
-if(NOT TARGET _bcm_internal_tests-${PROJECT_NAME})
-    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/_bcm_internal_tests-${PROJECT_NAME}.cpp "")
-    add_library(_bcm_internal_tests-${PROJECT_NAME} STATIC ${CMAKE_CURRENT_BINARY_DIR}/_bcm_internal_tests-${PROJECT_NAME}.cpp)
-    bcm_mark_as_test(_bcm_internal_tests-${PROJECT_NAME})
-endif()
+
+function(bcm_create_internal_targets)
+    if(NOT TARGET _bcm_internal_tests-${PROJECT_NAME})
+        file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/_bcm_internal_tests-${PROJECT_NAME}.cpp "")
+        add_library(_bcm_internal_tests-${PROJECT_NAME} STATIC ${CMAKE_CURRENT_BINARY_DIR}/_bcm_internal_tests-${PROJECT_NAME}.cpp)
+        bcm_mark_as_test(_bcm_internal_tests-${PROJECT_NAME})
+    endif()
+endfunction()
 
 foreach(scope DIRECTORY TARGET)
     define_property(${scope} PROPERTY "BCM_TEST_DEPENDENCIES" INHERITED
@@ -48,6 +51,7 @@ foreach(scope DIRECTORY TARGET)
 endforeach()
 
 function(bcm_test_link_libraries)
+    bcm_create_internal_targets()
     if(BUILD_TESTING)
         set_property(DIRECTORY APPEND PROPERTY BCM_TEST_DEPENDENCIES ${ARGN})
         target_link_libraries(_bcm_internal_tests-${PROJECT_NAME} ${ARGN})

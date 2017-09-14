@@ -2,8 +2,13 @@
 set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES ${CMAKE_CURRENT_BINARY_DIR}/tmp)
 
 function(create_test NAME TEST)
-    add_custom_target(${NAME} COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/test.cmake ${TEST} ${CMAKE_CURRENT_BINARY_DIR}/tmp/${NAME})
-    add_test(NAME ${NAME} COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/test.cmake ${TEST} ${CMAKE_CURRENT_BINARY_DIR}/tmp/${NAME})
+    set(CONTEXT)
+    # get_cmake_property(VARS VARIABLES)
+    foreach (VAR_NAME CMAKE_TOOLCHAIN_FILE)
+        list(APPEND CONTEXT -D${VAR_NAME}=${${VAR_NAME}})
+    endforeach()
+    add_custom_target(${NAME} COMMAND ${CMAKE_COMMAND} ${CONTEXT} -P ${CMAKE_CURRENT_SOURCE_DIR}/test.cmake ${TEST} ${CMAKE_CURRENT_BINARY_DIR}/tmp/${NAME})
+    add_test(NAME ${NAME} COMMAND ${CMAKE_COMMAND} ${CONTEXT} -P ${CMAKE_CURRENT_SOURCE_DIR}/test.cmake ${TEST} ${CMAKE_CURRENT_BINARY_DIR}/tmp/${NAME})
 endfunction()
 
 file(GLOB PASS_TESTS pass/*.cmake)

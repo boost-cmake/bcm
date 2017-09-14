@@ -1,13 +1,24 @@
 include(CMakeParseArguments)
 
+if(CMAKE_ARGC LESS 5)
+    message(FATAL_ERROR "Not enough parameters to test.cmake")
+endif()
+
+math(EXPR TMP_ARGN "${CMAKE_ARGC}-1")
+math(EXPR TEST_ARGN "${TMP_ARGN}-1")
+
 string(RANDOM _TEST_RAND)
-set(TEST ${CMAKE_ARGV3})
+set(TEST ${CMAKE_ARGV${TEST_ARGN}})
 set(TEST_DIR ${CMAKE_CURRENT_LIST_DIR})
-set(TMP_DIR ${CMAKE_ARGV4}-${_TEST_RAND})
+set(TMP_DIR ${CMAKE_ARGV${TMP_ARGN}}-${_TEST_RAND})
 file(MAKE_DIRECTORY ${TMP_DIR})
 set(PREFIX ${TMP_DIR}/usr)
 set(BUILDS_DIR ${TMP_DIR}/builds)
 # message("TMP_DIR: ${TMP_DIR}")
+
+if(NOT EXISTS ${TEST})
+    message(FATAL_ERROR "Test ${TEST} does not exist")
+endif()
 
 macro(test_expect_eq X Y)
     if(NOT ${X} EQUAL ${Y})
@@ -42,10 +53,14 @@ function(install_dir DIR)
     if(NOT EXISTS ${BUILD_DIR})
         file(MAKE_DIRECTORY ${BUILD_DIR})
     endif()
+    if(CMAKE_TOOLCHAIN_FILE)
+        set(TOOLCHAIN_ARG "-DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}")
+    endif()
     test_exec(COMMAND ${CMAKE_COMMAND}
         -DCMAKE_PREFIX_PATH=${PREFIX} 
         -DCMAKE_INSTALL_PREFIX=${PREFIX}
         -DTHREADS_PREFER_PTHREAD_FLAG=1
+        ${TOOLCHAIN_ARG}
         ${PARSE_CMAKE_ARGS}
         ${DIR}
         WORKING_DIRECTORY ${BUILD_DIR}

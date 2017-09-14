@@ -17,3 +17,5 @@ bcm_deploy(TARGETS simple INCLUDE include)
 
 bcm_test(NAME simpletoptest SOURCES test.cpp)
 target_link_libraries(simpletoptest simple)
+
+add_subdirectory(test)
