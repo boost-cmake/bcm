@@ -25,9 +25,13 @@ endif()
 function(bcm_mark_as_test)
     foreach(TEST_TARGET ${ARGN})
         if (NOT BUILD_TESTING)
-            set_target_properties(${TEST_TARGET}
-                PROPERTIES EXCLUDE_FROM_ALL TRUE
-            )
+            get_target_property(TEST_TARGET_TYPE ${TEST_TARGET} TYPE)
+            # We can onle use EXCLUDE_FROM_ALL on build targets
+            if(NOT "${TEST_TARGET_TYPE}" STREQUAL "INTERFACE_LIBRARY")
+                set_target_properties(${TEST_TARGET}
+                    PROPERTIES EXCLUDE_FROM_ALL TRUE
+                )
+            endif()
         endif()
         add_dependencies(tests ${TEST_TARGET})
         add_dependencies(tests-${PROJECT_NAME} ${TEST_TARGET})

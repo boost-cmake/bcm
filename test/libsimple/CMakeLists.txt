@@ -36,3 +36,6 @@ bcm_test_header(NAME simpletestheader HEADER simple.h)
 
 bcm_test_header(NAME simpleteststaticheader HEADER simple.h STATIC)
 
+add_library(simpletestinterface INTERFACE)
+bcm_mark_as_test(simpletestinterface)
+
