@@ -37,7 +37,7 @@ macro(bcm_shadow_notify TARGET)
 endmacro()
 # Check if target exists by querying the shadow target
 macro(bcm_shadow_exists OUT TARGET)
-    if("${TARGET}" MATCHES "^[_a-zA-Z0-9]+$")
+    if("${TARGET}" MATCHES "^[_a-zA-Z0-9:]+$")
         if(NOT TARGET _bcm_shadow_target_${TARGET})
             add_library(_bcm_shadow_target_${TARGET} INTERFACE IMPORTED GLOBAL)
             set_target_properties(_bcm_shadow_target_${TARGET} PROPERTIES INTERFACE_TARGET_EXISTS 0)
