@@ -28,22 +28,36 @@ define_property(TARGET PROPERTY "INTERFACE_TARGET_EXISTS"
     BRIEF_DOCS "True if target exists"
     FULL_DOCS "True if target exists"
 )
+define_property(GLOBAL PROPERTY "BCM_SHADOW_TARGETS"
+    BRIEF_DOCS "Shadow targets that have been created"
+    FULL_DOCS "Shadow targets that have been created"
+)
+
+function(bcm_shadow_target OUT TARGET)
+    string(REPLACE "::" "_bcm_shadow_colon_" TARGET_ID "${TARGET}")
+    set(${OUT} _bcm_shadow_target_${TARGET_ID} PARENT_SCOPE)
+    get_property(_SHADOW_TARGETS GLOBAL PROPERTY BCM_SHADOW_TARGETS)
+    if(NOT "${TARGET}" IN_LIST _SHADOW_TARGETS)
+        add_library(_bcm_shadow_target_${TARGET_ID} INTERFACE IMPORTED GLOBAL)
+        if(ARGC GREATER 2)
+            set_target_properties(_bcm_shadow_target_${TARGET_ID} PROPERTIES ${ARGN})
+        endif()
+        set_property(GLOBAL APPEND PROPERTY BCM_SHADOW_TARGETS ${TARGET})
+    endif()
+endfunction()
+
 # Create shadow target to notify that the target exists
 macro(bcm_shadow_notify TARGET)
-    if(NOT TARGET _bcm_shadow_target_${TARGET})
-        add_library(_bcm_shadow_target_${TARGET} INTERFACE IMPORTED GLOBAL)
-    endif()
-    set_target_properties(_bcm_shadow_target_${TARGET} PROPERTIES INTERFACE_TARGET_EXISTS 1)
+    bcm_shadow_target(SHADOW_TARGET ${TARGET})
+    set_target_properties(${SHADOW_TARGET} PROPERTIES INTERFACE_TARGET_EXISTS 1)
 endmacro()
 # Check if target exists by querying the shadow target
 macro(bcm_shadow_exists OUT TARGET)
-    if("${TARGET}" MATCHES "^[_a-zA-Z0-9]+$")
-        if(NOT TARGET _bcm_shadow_target_${TARGET})
-            add_library(_bcm_shadow_target_${TARGET} INTERFACE IMPORTED GLOBAL)
-            set_target_properties(_bcm_shadow_target_${TARGET} PROPERTIES INTERFACE_TARGET_EXISTS 0)
-        endif()
-        set(${OUT} "$<TARGET_PROPERTY:_bcm_shadow_target_${TARGET},INTERFACE_TARGET_EXISTS>")
+    if("${TARGET}" MATCHES "^[_a-zA-Z0-9:]+$")
+        bcm_shadow_target(SHADOW_TARGET ${TARGET} INTERFACE_TARGET_EXISTS 0)
+        set(${OUT} "$<TARGET_PROPERTY:${SHADOW_TARGET},INTERFACE_TARGET_EXISTS>")
     else()
+        message("Not a target: ${TARGET}")
         set(${OUT} "0")
     endif()
 endmacro()
