@@ -111,7 +111,8 @@ function(bcm_test)
         add_executable(${PARSE_NAME} ${SOURCES})
         bcm_mark_as_test(${PARSE_NAME})
         if(WIN32)
-            file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${PARSE_NAME}-test-run.cmake CONTENT "
+            foreach(CONFIG ${CMAKE_CONFIGURATION_TYPES} "")
+                file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${PARSE_NAME}-test-run-${CONFIG}.cmake CONTENT "
 include(\"${CMAKE_BINARY_DIR}/bcm_set_rpath-$<CONFIG>.cmake\")
 execute_process(
     COMMAND $<TARGET_FILE:${PARSE_NAME}> ${PARSE_ARGS} 
@@ -121,7 +122,8 @@ if(NOT RESULT EQUAL 0)
     message(FATAL_ERROR \"Test failed\")
 endif()
 ")
-            add_test(NAME ${PARSE_NAME} COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/${PARSE_NAME}-test-run.cmake)
+            endforeach()
+            add_test(NAME ${PARSE_NAME} COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/${PARSE_NAME}-test-run-$<CONFIG>.cmake)
             # add_test(NAME ${PARSE_NAME} WORKING_DIRECTORY ${LIBRARY_OUTPUT_PATH} COMMAND ${PARSE_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${PARSE_ARGS})
         else()
             add_test(NAME ${PARSE_NAME} COMMAND ${PARSE_NAME} ${PARSE_ARGS} WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
