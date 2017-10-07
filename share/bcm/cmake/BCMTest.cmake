@@ -112,7 +112,7 @@ function(bcm_test)
         bcm_mark_as_test(${PARSE_NAME})
         if(WIN32)
             file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${PARSE_NAME}-test-run.cmake CONTENT "
-include(\"${CMAKE_BINARY_DIR}/bcm_set_rpath.cmake\")
+include(\"${CMAKE_BINARY_DIR}/bcm_set_rpath-$<CONFIG>.cmake\")
 execute_process(
     COMMAND $<TARGET_FILE:${PARSE_NAME}> ${PARSE_ARGS} 
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} 
