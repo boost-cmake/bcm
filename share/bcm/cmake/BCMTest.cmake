@@ -121,7 +121,7 @@ execute_process(
 if(NOT RESULT EQUAL 0)
     message(FATAL_ERROR \"Test failed\")
 endif()
-")
+" CONDITION $<CONFIG:${CONFIG}>)
             endforeach()
             add_test(NAME ${PARSE_NAME} COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/${PARSE_NAME}-test-run-$<CONFIG>.cmake)
             # add_test(NAME ${PARSE_NAME} WORKING_DIRECTORY ${LIBRARY_OUTPUT_PATH} COMMAND ${PARSE_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${PARSE_ARGS})
