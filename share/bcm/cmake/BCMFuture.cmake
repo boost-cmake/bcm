@@ -47,7 +47,7 @@ macro(bcm_shadow_exists OUT TARGET)
         set(${OUT} "0")
     endif()
 endmacro()
-
+# Emulate rpath for windows
 if(WIN32)
     if(NOT COMMAND bcm_add_rpath)
         foreach(CONFIG ${CMAKE_CONFIGURATION_TYPES} "")
