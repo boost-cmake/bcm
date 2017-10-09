@@ -2,8 +2,12 @@ option(BUILD_TESTING off)
 
 enable_testing()
 
+include(ProcessorCount)
+ProcessorCount(_bcm_ctest_parallel_level)
+set(CTEST_PARALLEL_LEVEL ${_bcm_ctest_parallel_level} CACHE STRING "CTest parallel level")
+
 if(NOT TARGET check)
-    add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure -C ${CMAKE_CFG_INTDIR} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+    add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure -C ${CMAKE_CFG_INTDIR} -j ${CTEST_PARALLEL_LEVEL} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 endif()
 
 
@@ -13,7 +17,7 @@ if(NOT TARGET tests)
 endif()
 
 if(NOT TARGET check-${PROJECT_NAME})
-    add_custom_target(check-${PROJECT_NAME} COMMAND ${CMAKE_CTEST_COMMAND} -L ${PROJECT_NAME} --output-on-failure -C ${CMAKE_CFG_INTDIR} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+    add_custom_target(check-${PROJECT_NAME} COMMAND ${CMAKE_CTEST_COMMAND} -L ${PROJECT_NAME} --output-on-failure -C ${CMAKE_CFG_INTDIR} -j ${CTEST_PARALLEL_LEVEL} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 endif()
 
 if(NOT TARGET tests-${PROJECT_NAME})
