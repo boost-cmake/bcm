@@ -1,4 +1,3 @@
-include(CMakeParseArguments)
 
 if(CMAKE_ARGC LESS 5)
     message(FATAL_ERROR "Not enough parameters to test.cmake")

@@ -1,4 +1,3 @@
-include(CMakeParseArguments)
 include(GNUInstallDirs)
 
 function(bcm_install_targets)

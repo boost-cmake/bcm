@@ -1,6 +1,5 @@
 option(BUILD_TESTING off)
 
-include(CMakeParseArguments)
 enable_testing()
 
 if(NOT TARGET check)

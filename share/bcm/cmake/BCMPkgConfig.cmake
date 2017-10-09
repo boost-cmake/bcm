@@ -1,5 +1,4 @@
 
-include(CMakeParseArguments)
 include(GNUInstallDirs)
 
 define_property(TARGET PROPERTY "INTERFACE_DESCRIPTION"
