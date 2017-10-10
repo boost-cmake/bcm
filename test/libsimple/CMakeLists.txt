@@ -30,9 +30,15 @@ bcm_test(SOURCES test.cpp)
 
 bcm_test(NAME simpletestcompile SOURCES compiletest.cpp COMPILE_ONLY)
 
+bcm_test(SOURCES compiletest.cpp COMPILE_ONLY)
+
 bcm_test(NAME testwillfail SOURCES testwillfail.cpp WILL_FAIL)
 
+bcm_test(SOURCES testwillfail.cpp WILL_FAIL)
+
 bcm_test(NAME simpletestcompilewillfail SOURCES compiletestwillfail.cpp COMPILE_ONLY WILL_FAIL)
+
+bcm_test(SOURCES compiletestwillfail.cpp COMPILE_ONLY WILL_FAIL)
 
 bcm_test_header(NAME simpletestheader HEADER simple.h)
 
