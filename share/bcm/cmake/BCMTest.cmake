@@ -99,27 +99,32 @@ function(bcm_test)
         message(FATAL_ERROR "Unknown keywords given to bcm_test(): \"${PARSE_UNPARSED_ARGUMENTS}\"")
     endif()
 
-    # TODO: Check if name exists
-
     set(SOURCES ${PARSE_SOURCES})
+
+    if(PARSE_NAME)
+        set(TEST_NAME ${PARSE_NAME})
+    else()
+        string(MAKE_C_IDENTIFIER "${PROJECT_NAME}_${SOURCES}_test" TEST_NAME)
+    endif()
+
     if(PARSE_CONTENT)
-        file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/generated-${PARSE_NAME}.cpp "${PARSE_CONTENT}")
-        set(SOURCES ${CMAKE_CURRENT_BINARY_DIR}/generated-${PARSE_NAME}.cpp)
+        file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/generated-${TEST_NAME}.cpp "${PARSE_CONTENT}")
+        set(SOURCES ${CMAKE_CURRENT_BINARY_DIR}/generated-${TEST_NAME}.cpp)
     endif()
 
     if(PARSE_COMPILE_ONLY)
-        add_library(${PARSE_NAME} STATIC EXCLUDE_FROM_ALL ${SOURCES})
-        add_test(NAME ${PARSE_NAME}
-            COMMAND ${CMAKE_COMMAND} --build . --target ${PARSE_NAME} --config $<CONFIGURATION>
+        add_library(${TEST_NAME} STATIC EXCLUDE_FROM_ALL ${SOURCES})
+        add_test(NAME ${TEST_NAME}
+            COMMAND ${CMAKE_COMMAND} --build . --target ${TEST_NAME} --config $<CONFIGURATION>
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 
-        # set_tests_properties(${PARSE_NAME} PROPERTIES RESOURCE_LOCK bcm_test_compile_only)
+        # set_tests_properties(${TEST_NAME} PROPERTIES RESOURCE_LOCK bcm_test_compile_only)
     else()
-        add_executable(${PARSE_NAME} ${SOURCES})
-        bcm_mark_as_test(${PARSE_NAME})
+        add_executable(${TEST_NAME} ${SOURCES})
+        bcm_mark_as_test(${TEST_NAME})
         if(WIN32)
             foreach(CONFIG ${CMAKE_CONFIGURATION_TYPES} "")
-                file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${PARSE_NAME}-test-run-${CONFIG}.cmake CONTENT "
+                file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${TEST_NAME}-test-run-${CONFIG}.cmake CONTENT "
 include(\"${CMAKE_BINARY_DIR}/bcm_set_rpath-$<CONFIG>.cmake\")
 if(CMAKE_CROSSCOMPILING)
 foreach(RP \${RPATH})
@@ -131,7 +136,7 @@ else()
 set(ENV{PATH} \"\${RPATH};\$ENV{PATH}\")
 endif()
 execute_process(
-    COMMAND $<TARGET_FILE:${PARSE_NAME}> ${PARSE_ARGS} 
+    COMMAND $<TARGET_FILE:${TEST_NAME}> ${PARSE_ARGS} 
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} 
     RESULT_VARIABLE RESULT)
 if(NOT RESULT EQUAL 0)
@@ -139,17 +144,17 @@ if(NOT RESULT EQUAL 0)
 endif()
 " CONDITION $<CONFIG:${CONFIG}>)
             endforeach()
-            add_test(NAME ${PARSE_NAME} COMMAND ${CMAKE_COMMAND} -DCMAKE_CROSSCOMPILING=${CMAKE_CROSSCOMPILING} -P ${CMAKE_CURRENT_BINARY_DIR}/${PARSE_NAME}-test-run-$<CONFIG>.cmake)
+            add_test(NAME ${TEST_NAME} COMMAND ${CMAKE_COMMAND} -DCMAKE_CROSSCOMPILING=${CMAKE_CROSSCOMPILING} -P ${CMAKE_CURRENT_BINARY_DIR}/${TEST_NAME}-test-run-$<CONFIG>.cmake)
         else()
-            add_test(NAME ${PARSE_NAME} COMMAND ${PARSE_NAME} ${PARSE_ARGS} WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+            add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME} ${PARSE_ARGS} WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
         endif()
     endif()
     if(PARSE_WILL_FAIL)
-        set_tests_properties(${PARSE_NAME} PROPERTIES WILL_FAIL TRUE)
+        set_tests_properties(${TEST_NAME} PROPERTIES WILL_FAIL TRUE)
     endif()
-    set_tests_properties(${PARSE_NAME} PROPERTIES LABELS ${PROJECT_NAME})
+    set_tests_properties(${TEST_NAME} PROPERTIES LABELS ${PROJECT_NAME})
     if(NOT PARSE_NO_TEST_LIBS)
-        bcm_target_link_test_libs(${PARSE_NAME})
+        bcm_target_link_test_libs(${TEST_NAME})
     endif()
 endfunction(bcm_test)
 
@@ -160,24 +165,31 @@ function(bcm_test_header)
 
     cmake_parse_arguments(PARSE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
+    if(PARSE_UNPARSED_ARGUMENTS)
+        message(FATAL_ERROR "Unknown keywords given to bcm_test_header(): \"${PARSE_UNPARSED_ARGUMENTS}\"")
+    endif()
+
+    if(PARSE_NAME)
+        set(TEST_NAME ${PARSE_NAME})
+    else()
+        string(MAKE_C_IDENTIFIER "${PROJECT_NAME}_${PARSE_HEADER}_header_test" TEST_NAME)
+    endif()
+
     if(PARSE_STATIC)
-        file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/header-main-include-${PARSE_NAME}.cpp 
+        file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/header-main-include-${TEST_NAME}.cpp 
             "#include <${PARSE_HEADER}>\nint main() {}\n"
         )
-        file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/header-static-include-${PARSE_NAME}.cpp 
+        file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/header-static-include-${TEST_NAME}.cpp 
             "#include <${PARSE_HEADER}>\n"
         )
-        bcm_test(NAME ${PARSE_NAME} SOURCES
-            ${CMAKE_CURRENT_BINARY_DIR}/header-main-include-${PARSE_NAME}.cpp 
-            ${CMAKE_CURRENT_BINARY_DIR}/header-static-include-${PARSE_NAME}.cpp
+        bcm_test(NAME ${TEST_NAME} SOURCES
+            ${CMAKE_CURRENT_BINARY_DIR}/header-main-include-${TEST_NAME}.cpp 
+            ${CMAKE_CURRENT_BINARY_DIR}/header-static-include-${TEST_NAME}.cpp
         )
     else()
-        bcm_test(NAME ${PARSE_NAME} CONTENT
+        bcm_test(NAME ${TEST_NAME} CONTENT
             "#include <${PARSE_HEADER}>\nint main() {}\n"
         )
     endif()
-    set_tests_properties(${PARSE_NAME} PROPERTIES LABELS ${PROJECT_NAME})
-    if(NOT PARSE_NO_TEST_LIBS)
-        bcm_target_link_test_libs(${PARSE_NAME})
-    endif()
+    set_tests_properties(${TEST_NAME} PROPERTIES LABELS ${PROJECT_NAME})
 endfunction(bcm_test_header)
