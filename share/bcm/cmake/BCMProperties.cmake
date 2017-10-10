@@ -31,11 +31,16 @@ foreach(scope GLOBAL DIRECTORY TARGET)
 endforeach()
 # Set the default for these properties at global scope. If they are not set per target or
 # whatever, the next highest scope will be looked up
-set_property(GLOBAL PROPERTY CXX_EXCEPTIONS ON)
-set_property(GLOBAL PROPERTY CXX_RTTI ON)
-set_property(GLOBAL PROPERTY CXX_STATIC_RUNTIME OFF)
-set_property(GLOBAL PROPERTY CXX_WARNINGS ON)
-set_property(GLOBAL PROPERTY CXX_WARNINGS_AS_ERRORS OFF)
+set(CMAKE_CXX_EXCEPTIONS ON CACHE BOOL "Enable C++ exceptions, defaults to ON at global scope")
+set(CMAKE_CXX_RTTI ON CACHE BOOL "Enable C++ runtime type information, defaults to ON at global scope")
+set(CMAKE_CXX_STATIC_RUNTIME OFF CACHE BOOL "Enable linking against the static C++ runtime, defaults to OFF at global scope")
+set(CMAKE_CXX_WARNINGS ON CACHE BOOL "Controls the warning level of compilers, defaults to ON at global scope")
+set(CMAKE_CXX_WARNINGS_AS_ERRORS OFF CACHE BOOL "Treat warnings as errors and abort compilation on a warning, defaults to OFF at global scope")
+set_property(GLOBAL PROPERTY CXX_EXCEPTIONS ${CMAKE_CXX_EXCEPTIONS})
+set_property(GLOBAL PROPERTY CXX_RTTI ${CMAKE_CXX_RTTI})
+set_property(GLOBAL PROPERTY CXX_STATIC_RUNTIME ${CMAKE_CXX_STATIC_RUNTIME})
+set_property(GLOBAL PROPERTY CXX_WARNINGS ${CMAKE_CXX_WARNINGS})
+set_property(GLOBAL PROPERTY CXX_WARNINGS_AS_ERRORS ${CMAKE_CXX_WARNINGS_AS_ERRORS})
 if(MSVC)
   # Purge unconditional use of /MDd, /MD and /EHsc.
   foreach(flag
