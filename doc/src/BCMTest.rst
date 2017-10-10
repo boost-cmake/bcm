@@ -38,6 +38,10 @@ This a string that will be used to create a test to be compiled and/or ran.
 
 Name of the test.
 
+.. option:: ARGS <args>
+
+This sets additional arguments to be passed to the test executable when it will be ran.
+
 .. option:: COMPILE_ONLY
 
 This just compiles the test instead of running it. As such, a ``main`` function is not required.
