@@ -41,7 +41,7 @@ function(test_exec)
 endfunction()
 
 function(install_dir DIR)
-    set(options)
+    set(options NO_INSTALL)
     set(oneValueArgs)
     set(multiValueArgs CMAKE_ARGS TARGETS)
 
@@ -68,9 +68,15 @@ function(install_dir DIR)
     foreach(TARGET ${PARSE_TARGETS})
         test_exec(COMMAND ${CMAKE_COMMAND} --build ${BUILD_DIR} --target ${TARGET})
     endforeach()
-    test_exec(COMMAND ${CMAKE_COMMAND} --build ${BUILD_DIR} --target install)
+    if(NOT PARSE_NO_INSTALL)
+        test_exec(COMMAND ${CMAKE_COMMAND} --build ${BUILD_DIR} --target install)
+    endif()
 
     file(REMOVE_RECURSE ${BUILD_DIR})
+endfunction()
+
+function(build_dir DIR)
+    install_dir(${DIR} ${ARGN} NO_INSTALL)
 endfunction()
 
 function(test_check_pkgconfig)

@@ -31,11 +31,18 @@ foreach(scope GLOBAL DIRECTORY TARGET)
 endforeach()
 # Set the default for these properties at global scope. If they are not set per target or
 # whatever, the next highest scope will be looked up
-set_property(GLOBAL PROPERTY CXX_EXCEPTIONS ON)
-set_property(GLOBAL PROPERTY CXX_RTTI ON)
-set_property(GLOBAL PROPERTY CXX_STATIC_RUNTIME OFF)
-set_property(GLOBAL PROPERTY CXX_WARNINGS ON)
-set_property(GLOBAL PROPERTY CXX_WARNINGS_AS_ERRORS OFF)
+option(CMAKE_CXX_EXCEPTIONS ON)
+option(CMAKE_CXX_RTTI ON)
+option(CMAKE_CXX_STATIC_RUNTIME OFF)
+option(CMAKE_CXX_WARNINGS ON)
+option(CMAKE_CXX_WARNINGS_AS_ERRORS OFF)
+
+set_property(GLOBAL PROPERTY CXX_EXCEPTIONS ${CMAKE_CXX_EXCEPTIONS})
+set_property(GLOBAL PROPERTY CXX_RTTI ${CMAKE_CXX_RTTI})
+set_property(GLOBAL PROPERTY CXX_STATIC_RUNTIME ${CMAKE_CXX_STATIC_RUNTIME})
+set_property(GLOBAL PROPERTY CXX_WARNINGS ${CMAKE_CXX_WARNINGS})
+set_property(GLOBAL PROPERTY CXX_WARNINGS_AS_ERRORS ${CMAKE_CXX_WARNINGS_AS_ERRORS})
+
 if(MSVC)
   # Purge unconditional use of /MDd, /MD and /EHsc.
   foreach(flag
