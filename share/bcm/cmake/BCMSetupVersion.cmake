@@ -70,13 +70,13 @@ function(bcm_setup_version)
         set(COMPATIBILITY_ARG ${PARSE_COMPATIBILITY})
     endif()
     write_basic_config_version_file(
-        ${CMAKE_CURRENT_BINARY_DIR}/${VERSION_CONFIG_FILE}-version.cmake
+        ${VERSION_CONFIG_FILE}
         VERSION ${PROJECT_VERSION}
         COMPATIBILITY ${COMPATIBILITY_ARG}
     )
 
     install(FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/${VERSION_CONFIG_FILE}-version.cmake
+        ${VERSION_CONFIG_FILE}
         DESTINATION
         ${CONFIG_PACKAGE_INSTALL_DIR})
 
