@@ -116,16 +116,6 @@ include(\"\${CMAKE_CURRENT_LIST_DIR}/properties-${TARGET_FILE}.cmake\")
 
     file(GENERATE OUTPUT "${CONFIG_FILE}" CONTENT "${CONFIG_FILE_CONTENT}")
 
-    set(COMPATIBILITY_ARG SameMajorVersion)
-    if(PARSE_COMPATIBILITY)
-        set(COMPATIBILITY_ARG ${PARSE_COMPATIBILITY})
-    endif()
-    write_basic_config_version_file(
-        ${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_NAME}-version.cmake
-        VERSION ${TARGET_VERSION}
-        COMPATIBILITY ${COMPATIBILITY_ARG}
-    )
-
     set(NAMESPACE_ARG)
     if(PARSE_NAMESPACE)
         set(NAMESPACE_ARG "NAMESPACE;${PARSE_NAMESPACE}")
@@ -138,7 +128,6 @@ include(\"\${CMAKE_CURRENT_LIST_DIR}/properties-${TARGET_FILE}.cmake\")
 
     install( FILES
         ${CONFIG_FILE}
-        ${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_NAME}-version.cmake
         DESTINATION
         ${CONFIG_PACKAGE_INSTALL_DIR})
 

@@ -8,7 +8,7 @@ endmacro()
 
 function(bcm_setup_version)
     set(options)
-    set(oneValueArgs VERSION GENERATE_HEADER PARSE_HEADER PREFIX)
+    set(oneValueArgs VERSION GENERATE_HEADER PARSE_HEADER PREFIX NAME COMPATIBILITY)
     set(multiValueArgs)
 
     cmake_parse_arguments(PARSE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
@@ -18,6 +18,22 @@ function(bcm_setup_version)
     if(PARSE_PREFIX)
         set(PREFIX ${PARSE_PREFIX})
     endif()
+
+    string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
+    set(PACKAGE_NAME ${PROJECT_NAME})
+    if(PARSE_NAME)
+        set(PACKAGE_NAME ${PARSE_NAME})
+    endif()
+
+    string(TOUPPER ${PACKAGE_NAME} PACKAGE_NAME_UPPER)
+    string(TOLOWER ${PACKAGE_NAME} PACKAGE_NAME_LOWER)
+
+    set(CONFIG_NAME ${PACKAGE_NAME_LOWER}-config)
+
+    set(LIB_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR})
+    set(CONFIG_PACKAGE_INSTALL_DIR ${LIB_INSTALL_DIR}/cmake/${PACKAGE_NAME_LOWER})
+
+    set(VERSION_CONFIG_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_NAME}-version.cmake")
 
     if(PARSE_VERSION)
         bcm_set_parent(PROJECT_VERSION ${PARSE_VERSION})
@@ -48,5 +64,20 @@ function(bcm_setup_version)
         configure_file("${BCM_HEADER_VERSION_TEMPLATE_FILE}" "${PARSE_GENERATE_HEADER}")
         install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PARSE_GENERATE_HEADER}" DESTINATION include)
     endif()
+
+    set(COMPATIBILITY_ARG SameMajorVersion)
+    if(PARSE_COMPATIBILITY)
+        set(COMPATIBILITY_ARG ${PARSE_COMPATIBILITY})
+    endif()
+    write_basic_config_version_file(
+        ${CMAKE_CURRENT_BINARY_DIR}/${VERSION_CONFIG_FILE}-version.cmake
+        VERSION ${PROJECT_VERSION}
+        COMPATIBILITY ${COMPATIBILITY_ARG}
+    )
+
+    install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/${VERSION_CONFIG_FILE}-version.cmake
+        DESTINATION
+        ${CONFIG_PACKAGE_INSTALL_DIR})
 
 endfunction()
