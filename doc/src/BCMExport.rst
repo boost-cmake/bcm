@@ -18,10 +18,6 @@ This specifies an export file. By default, the export file will be named ``${PRO
 
 This is the namespace to add to the targets that are exported.
 
-.. option:: COMPATIBILITY <compatibility>
-
-This uses the version compatibility specified by cmake version config.
-
 .. option:: NAME <name>
 
 This is the name to use for the package config file. By default, this uses the project name, but this parameter can override it.

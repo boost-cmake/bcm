@@ -15,6 +15,8 @@ This sets up the project version by setting these version variables::
     PROJECT_VERSION_MINOR, ${PROJECT_NAME}_VERSION_MINOR
     PROJECT_VERSION_PATCH, ${PROJECT_NAME}_VERSION_PATCH
 
+It also generates a cmake package config version file as well.
+
 .. option:: VERSION <major>.<minor>.<patch>
 
 This is the version to be set.
@@ -30,4 +32,12 @@ By default, the upper case of the project name is used as a prefix for the versi
 .. option:: PARSE_HEADER <header-name>
 
 Rather than set a version and generate a header, this will parse a header with macros that define the version, and then use those values to set the version for the project.
+
+.. option:: COMPATIBILITY <compatibility>
+
+This uses the version compatibility specified by cmake version config.
+
+.. option:: NAME <name>
+
+This is the name to use for the package config version file. By default, this uses the project name, but this parameter can override it.
 
