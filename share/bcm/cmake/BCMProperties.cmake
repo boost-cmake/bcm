@@ -31,11 +31,11 @@ foreach(scope GLOBAL DIRECTORY TARGET)
 endforeach()
 # Set the default for these properties at global scope. If they are not set per target or
 # whatever, the next highest scope will be looked up
-option(CMAKE_CXX_EXCEPTIONS ON)
-option(CMAKE_CXX_RTTI ON)
-option(CMAKE_CXX_STATIC_RUNTIME OFF)
-option(CMAKE_CXX_WARNINGS ON)
-option(CMAKE_CXX_WARNINGS_AS_ERRORS OFF)
+option(CMAKE_CXX_EXCEPTIONS "Enable exceptions" ON)
+option(CMAKE_CXX_RTTI "Enable rtti" ON)
+option(CMAKE_CXX_STATIC_RUNTIME "Enable static runtime" OFF)
+option(CMAKE_CXX_WARNINGS "Enable warnings" ON)
+option(CMAKE_CXX_WARNINGS_AS_ERRORS "Enable warnings as errors" OFF)
 
 set_property(GLOBAL PROPERTY CXX_EXCEPTIONS ${CMAKE_CXX_EXCEPTIONS})
 set_property(GLOBAL PROPERTY CXX_RTTI ${CMAKE_CXX_RTTI})

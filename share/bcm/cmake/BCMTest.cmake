@@ -1,5 +1,13 @@
-option(BUILD_TESTING off)
+option(ENABLE_TESTING "Build tests" on)
+option(BUILD_TESTING "Enable tests" off)
 
+macro(bcm_add_test_subdirectory)
+    if(ENABLE_TESTING OR ENABLE_TESTING_${PROJECT_NAME})
+        add_subdirectory(${ARGN})
+    endif()
+endmacro()
+
+if(ENABLE_TESTING)
 enable_testing()
 
 include(ProcessorCount)
@@ -9,7 +17,6 @@ set(CTEST_PARALLEL_LEVEL ${_bcm_ctest_parallel_level} CACHE STRING "CTest parall
 if(NOT TARGET check)
     add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure -C ${CMAKE_CFG_INTDIR} -j ${CTEST_PARALLEL_LEVEL} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 endif()
-
 
 if(NOT TARGET tests)
     add_custom_target(tests COMMENT "Build all tests.")
@@ -193,3 +200,21 @@ function(bcm_test_header)
     endif()
     set_tests_properties(${TEST_NAME} PROPERTIES LABELS ${PROJECT_NAME})
 endfunction(bcm_test_header)
+
+else()
+
+# Do nothing if tests are not enabled
+macro(bcm_mark_as_test)
+endmacro()
+macro(bcm_create_internal_targets)
+endmacro()
+macro(bcm_test_link_libraries)
+endmacro()
+macro(bcm_target_link_test_libs)
+endmacro()
+macro(bcm_test)
+endmacro()
+macro(bcm_test_header)
+endmacro()
+
+endif()
