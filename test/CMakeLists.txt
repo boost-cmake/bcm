@@ -5,10 +5,11 @@ set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES ${CMAKE_CURRE
 
 set(SKIP_TESTS)
 
-if(DEFINED $ENV{APPVEYOR})
+if(DEFINED ENV{APPVEYOR})
     list(APPEND SKIP_TESTS
         pass-basic
-        pass-simple
+        pass-simplecustomname
+        pass-simplenamespace
         pass-simple-test
     )
 endif()
