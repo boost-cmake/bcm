@@ -2,6 +2,15 @@ option(BUILD_TESTING off)
 
 enable_testing()
 
+foreach(scope GLOBAL DIRECTORY)
+  define_property(${scope} PROPERTY "ENABLE_TESTS" INHERITED
+    BRIEF_DOCS "Enable tests"
+    FULL_DOCS "Enable tests"
+  )
+endforeach()
+option(CMAKE_ENABLE_TESTS "Enable tests" ON)
+set_property(GLOBAL PROPERTY ENABLE_TESTS ${CMAKE_ENABLE_TESTS})
+
 include(ProcessorCount)
 ProcessorCount(_bcm_ctest_parallel_level)
 set(CTEST_PARALLEL_LEVEL ${_bcm_ctest_parallel_level} CACHE STRING "CTest parallel level")
@@ -193,3 +202,12 @@ function(bcm_test_header)
     endif()
     set_tests_properties(${TEST_NAME} PROPERTIES LABELS ${PROJECT_NAME})
 endfunction(bcm_test_header)
+
+macro(bcm_add_test_subdirectory)
+    get_directory_property(_enable_tests_property ENABLE_TESTS)
+    get_property(_enable_tests_global_property GLOBAL PROPERTY ENABLE_TESTS)
+    string(TOUPPER "${_enable_tests_property}" _enable_tests_property_upper)
+    if(_enable_tests_property_upper STREQUAL "OFF" OR _enable_tests_property_upper EQUAL 1)
+        add_subdirectory(${ARGN})
+    endif()
+endmacro()

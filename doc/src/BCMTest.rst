@@ -78,4 +78,12 @@ Rather than just test the include, using ``STATIC`` option will test the include
 
 This won't link in the libraries specified by ``bcm_test_link_libraries``
 
+-------------------------
+bcm_add_test_subdirectory
+-------------------------
+
+.. program:: bcm_add_test_subdirectory
+
+This calls ``add_subdirectory`` if the ``ENABLE_TESTS`` property is true. The default value for the property is set by ``CMAKE_ENABLE_TESTS`` variable.
+
 
