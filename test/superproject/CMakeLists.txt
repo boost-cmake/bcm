@@ -6,5 +6,5 @@ include(BCMIgnorePackage)
 
 bcm_ignore_package(simple)
 
-add_subdirectory(../libsimplenamespace libsimplenamespace)
 add_subdirectory(../libbasicnamespace libbasicnamespace)
+add_subdirectory(../libsimplenamespace libsimplenamespace)
