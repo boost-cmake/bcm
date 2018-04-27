@@ -1,4 +1,4 @@
-option(BUILD_TESTING off)
+option(BUILD_TESTING "Controls whether to build the tests as part of the main build" off)
 
 enable_testing()
 
