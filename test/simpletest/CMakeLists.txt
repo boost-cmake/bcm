@@ -15,9 +15,8 @@ target_include_directories(simple PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOUR
 
 bcm_deploy(TARGETS simple INCLUDE include)
 
-if(ENABLE_TESTING)
-bcm_test(NAME simpletoptest SOURCES test.cpp)
-target_link_libraries(simpletoptest simple)
-endif()
-
 bcm_add_test_subdirectory(test)
+
+if(TARGET simpletest)
+    message(FATAL_ERROR "simpletest was not added")
+endif()

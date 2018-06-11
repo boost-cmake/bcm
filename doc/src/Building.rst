@@ -304,15 +304,16 @@ As we were setting up cmake for standalone builds, we made sure we didn't do any
         add_subdirectory(${lib})
     endforeach()
 
-We could also use ``add_subdirectory(${lib} EXCLUDE_FROM_ALL)`` so it builds targets that are not necessary. Of course, every project is still calling ``find_package`` to find prebuilt binaries. Since we don't need to search for those libraries because they are integrated into the build we can override ``find_package`` to ignore those dependencies::
+We could also use ``add_subdirectory(${lib} EXCLUDE_FROM_ALL)`` so it builds targets that are not necessary. Of course, every project is still calling ``find_package`` to find prebuilt binaries. Since we don't need to search for those libraries because they are integrated into the build we can call ``bcm_ignore_package`` to ignore those dependencies::
 
     file(GLOB LIBS libs/*)
-    macro(find_package NAME)
-        if(NOT "${NAME}" IN_LIST LIBS)
-            _find_package(${ARGV})
-        endif()
-    endmacro()
+
+    foreach(lib ${LIBS})
+        bcm_ignore_package(${lib})
+    endforeach()
 
     foreach(lib ${LIBS})
         add_subdirectory(${lib})
     endforeach()
+
+Of course, this assumes we have conveniently named each directory the same as its package name.
