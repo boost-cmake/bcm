@@ -18,4 +18,9 @@ bcm_deploy(TARGETS simple INCLUDE include)
 bcm_test(NAME simpletoptest SOURCES test.cpp)
 target_link_libraries(simpletoptest simple)
 
-add_subdirectory(test)
+bcm_add_test_subdirectory(test)
+
+if(TARGET simpletest)
+    message(FATAL_ERROR "simpletest was not added")
+endif()
+

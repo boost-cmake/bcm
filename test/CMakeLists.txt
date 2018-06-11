@@ -1,5 +1,18 @@
 
+cmake_policy(SET CMP0057 NEW)
+
 set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES ${CMAKE_CURRENT_BINARY_DIR}/tmp)
+
+set(SKIP_TESTS)
+
+if(DEFINED ENV{APPVEYOR})
+    list(APPEND SKIP_TESTS
+        pass-basic
+        pass-simplecustomname
+        pass-simplenamespace
+        pass-simple-test
+    )
+endif()
 
 function(create_test NAME TEST)
     set(CONTEXT)
@@ -8,7 +21,12 @@ function(create_test NAME TEST)
         list(APPEND CONTEXT -D${VAR_NAME}=${${VAR_NAME}})
     endforeach()
     add_custom_target(${NAME} COMMAND ${CMAKE_COMMAND} ${CONTEXT} -P ${CMAKE_CURRENT_SOURCE_DIR}/test.cmake ${TEST} ${CMAKE_CURRENT_BINARY_DIR}/tmp/${NAME})
-    add_test(NAME ${NAME} COMMAND ${CMAKE_COMMAND} ${CONTEXT} -P ${CMAKE_CURRENT_SOURCE_DIR}/test.cmake ${TEST} ${CMAKE_CURRENT_BINARY_DIR}/tmp/${NAME})
+    if(NAME IN_LIST SKIP_TESTS)
+        add_test(NAME ${NAME} COMMAND echo skipped)
+        set_tests_properties(${NAME} PROPERTIES DISABLED On)
+    else()
+        add_test(NAME ${NAME} COMMAND ${CMAKE_COMMAND} ${CONTEXT} -P ${CMAKE_CURRENT_SOURCE_DIR}/test.cmake ${TEST} ${CMAKE_CURRENT_BINARY_DIR}/tmp/${NAME})
+    endif()
 endfunction()
 
 file(GLOB PASS_TESTS pass/*.cmake)
