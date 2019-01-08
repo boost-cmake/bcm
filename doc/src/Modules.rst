@@ -6,10 +6,10 @@ Modules
 
     BCMDeploy
     BCMExport
-    BCMIgnorePackage
     BCMInstallTargets
     BCMPkgConfig
     BCMProperties
+    BCMRegisterSourcePackage
     BCMSetupVersion
     BCMTest
     
