@@ -20,7 +20,7 @@ target_link_libraries(simpletoptest simple)
 
 bcm_add_test_subdirectory(test)
 
-if(TARGET simpletest)
+if(NOT TARGET simpletest)
     message(FATAL_ERROR "simpletest was not added")
 endif()
 
